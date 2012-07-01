@@ -1,16 +1,13 @@
 # 用AMD，CommonJS 和 ES Harmony编写模块化的JavaScript #
 
 ## 模块化 ##
-
-> 解耦你的程序的重要性
+    > 解耦你的程序的重要性
 
 当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
-然而与传统的编程语言不用的是，当前版本的JavaScript（[ECMA-262]）并没有为提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
+然而与传统编程语言不用的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
 
-Instead, developers at present are left to fall back on variations of the [module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code) patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it's still possible to incur naming collisions in your architecture. There's also no clean way to handle dependency management without some manual effort or third party tools.
-
-取而代之的是，在当前开发者仍然只能回到使用模块或者对象字面量模式等替代方法上。*在这当中，模块脚本被一个单一全局对象命名空间在Dom中被串联起来*。在缺少一些人工的处理或者第三方工具时，这也不是一个合理的处理依赖管理的方式。
+取而代之的是，当前开发者仍然只能回到使用模块[module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)或者对象字面量模式等替代方法上。在这当中，模块脚本在Dom中被一个单一全局对象用命名空间串联起来，但这仍然可能在你的结构中导致命名冲突。在缺少一些人为处理或第三方工具时，这也不是处理依赖管理的干净的方式。
 
 虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是容易的但你可以从今天开始做这件事情。
 
@@ -18,7 +15,7 @@ Instead, developers at present are left to fall back on variations of the [modul
 
 ## 前奏 ##
 
-> 关于脚本加载器的说明
+    > 关于脚本加载器的说明
 
 很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
 
@@ -30,7 +27,7 @@ Instead, developers at present are left to fall back on variations of the [modul
 
 ## AMD ##
 
-> 一个在浏览器端编写模块化JavaScript的格式
+    > 一个在浏览器端编写模块化JavaScript的格式
 
 AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
@@ -38,26 +35,23 @@ AMD模块格式本身是一个提议，用于定义模块使模块以及依赖�
 
 AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了amdjs组。
 
-Today it's embraced by projects including Dojo (1.7), MooTools (2.0), Firebug (1.8) and even jQuery (1.7). Although the term CommonJS AMD format has been seen in the wild on occasion, it's best to refer to it as just AMD or Async Module support as not all participants on the CJS list wished to pursue it.
+今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS AMD格式等术语已在广泛的场合被了解，但最好上还是仅指AMD或者异步模块支持（）因为不是所有的CJS目录的参与者都希望如此。
 
-今天它被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。*CommonJS的术语AMD的格式虽然已在野外场合上看到，这是最好的指空肠名单上的所有参与者不希望追求它只是AMD或异步模块支持。*
-
-> **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
-
-> **说明：** .。。。
+    > **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
+    > **说明：**
 
 ### Getting Started With Modules ###
 ### 模块入门 ###
 
 在这里需要关注的两个关键概念是用于促进模块定义的define方法以及用于处理依赖加载的require方法。根据提议，define使用以下签名明码来定义命名的或者未命名的模块：
 
-`
+```
 define(
-    module_id /*optional*/, 
+    module_id /*optional*/,
     [dependencies] /*optional*/,
     definition function /*function for instantiating the module or object*/
 );
-`
+```
 
 正如你在行内注释了解到的一样，module_id是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
 
@@ -70,7 +64,7 @@ define(
 ```
 // A module_id (myModule) is used here for demonstration purposes only
 define('myModule',
-    ['foo', 'bar'], 
+    ['foo', 'bar'],
     // module definition function
     // dependencies (foo and bar) are mapped to function parameters
     function ( foo, bar ) {
@@ -85,8 +79,8 @@ define('myModule',
         return myModule;
 });
 // An alternative example could be..
-define('myModule', 
-    ['math', 'graph'], 
+define('myModule',
+    ['math', 'graph'],
     function ( math, graph ) {
         // Note that this is a slightly different pattern
         // With AMD, it's possible to define modules in a few
@@ -101,8 +95,6 @@ define('myModule',
 });
 ```
 
-require on the other hand is typically used to load code in a top-level JavaScript file or within a module should you wish to dynamically fetch dependencies. An example of its usage is:
-
 另一方面，require通常用于加载处于顶层的JavaScript文件代码或你希望的在模块内部动态地获取依赖。一个使用的例子如下：
 
 ### Understanding AMD: require() ###
@@ -113,7 +105,7 @@ require on the other hand is typically used to load code in a top-level JavaScri
 // In this example, the 'exports' from the two modules loaded are passed as
 // function arguments to the callback (foo and bar)
 // so that they can similarly be accessed
- 
+
 require(['foo', 'bar'], function ( foo, bar ) {
         // rest of your code here
         foo.doSomething();
@@ -126,13 +118,13 @@ require(['foo', 'bar'], function ( foo, bar ) {
 ```
 define(function ( require ) {
     var isReady = false, foobar;
- 
+
     // note the inline require within our module definition
     require(['foo', 'bar'], function (foo, bar) {
         isReady = true;
         foobar = foo() + bar();
     });
- 
+
     // we can still return a module
     return {
         isReady: isReady,
@@ -144,14 +136,14 @@ define(function ( require ) {
 ### Understanding AMD: plugins ###
 ### 理解AMD: 插件 ###
 
-The following is an example of defining an AMD-compatible plugin:
+下面是一个等译一个AMD兼容插件的实例：
 
 ```
 // With AMD, it's possible to load in assets of almost any kind
 // including text-files and HTML. This enables us to have template
 // dependencies which can be used to skin components either on
 // page-load or dynamically.
- 
+
 define(['./templates', 'text!./template.md','css!./template.css'],
     function( templates, template ){
         console.log(templates);
@@ -160,9 +152,9 @@ define(['./templates', 'text!./template.md','css!./template.css'],
 });
 ```
 
-> **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
+    > **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
 
-> **Note**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的过程，**待写**
+    > **Note**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的过程，**待写**
 
 ### Loading AMD Modules Using require.js ###
 
@@ -201,7 +193,7 @@ curl(['app/myModule.js'],
 // futures.js (slightly different syntax) or any one of a number
 // of other implementations
 define(['lib/Deferred'], function( Deferred ){
-    var defer = new Deferred(); 
+    var defer = new Deferred();
     require(['lib/templates/?index.html','lib/data/?stats'],
         function( template, data ){
             defer.resolve({ template: template, data:data });
@@ -219,7 +211,7 @@ define(['lib/Deferred'], function( Deferred ){
 - 语法比目前我们依靠的全局命名空间以及**&amp;script&amp;**标签等解决方案清晰。有一个干净的方式用来声明独立的模块以及可能的依赖。
 - 模块定义是经过封装的，帮助我们避免污染全局命名空间。
 - 比起其他可选的解决方案（例如很快会介绍的CommonJS）工作得更好。在跨域、本地、以及debug方面没有问题。使用时不需要依赖服务器端的工具。大多数AMD的加载器在浏览器端加载模块时并不需要build过程。
-- 提供了 'transport'方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
+- 提供了 `transport`方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
 - 当需要是可以懒加载脚本。
 
 ### Related Reading ###
@@ -249,16 +241,18 @@ define(["dijit/Tooltip"], function( Tooltip ){
 
 For those wondering about module referencing, there are some interesting gotchas that are useful to know here. Although the AMD-advocated way of referencing modules declares them in the dependency list with a set of matching arguments, this isn't supported by the Dojo 1.6 build system - it really only works for AMD-compliant loaders. e.g:
 
+
+
 ```
 define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
-    var cookieValue = cookie("cookieName"); 
-    new Tree(...); 
+    var cookieValue = cookie("cookieName");
+    new Tree(...);
 });
 ```
 
 This has many advances over nested namespacing as modules no longer need to directly reference complete namespaces every time - all we require is the 'dojo/cookie' path in dependencies, which once aliased to an argument, can be referenced by that variable. This removes the need to repeatedly type out 'dojo.' in your applications.
 
-> **Note**: Although Dojo 1.6 doesn't officially support user-based AMD modules (nor asynchronous loading), it's possible to get this working with Dojo using a number of different script loaders. At present, all Dojo core and Dijit modules have been transformed to the AMD syntax and improved overall AMD support will likely land between 1.7 and 2.0.
+    > **Note**: Although Dojo 1.6 doesn't officially support user-based AMD modules (nor asynchronous loading), it's possible to get this working with Dojo using a number of different script loaders. At present, all Dojo core and Dijit modules have been transformed to the AMD syntax and improved overall AMD support will likely land between 1.7 and 2.0.
 
 The final gotcha to be aware of is that if you wish to continue using the Dojo build system or wish to migrate older modules to this newer AMD-style, the following more verbose version enables easier migration. Notice that dojo and dijit and referenced as dependencies too:
 
@@ -281,31 +275,31 @@ Some samples of these patterns can be found below:
 // mylib/UpdatableObservable: a decorator for dojo/store/Observable
 define(['dojo', 'dojo/store/Observable'], function ( dojo, Observable ) {
     return function UpdatableObservable ( store ) {
- 
+
         var observable = dojo.isFunction(store.notify) ? store :
                 new Observable(store);
- 
+
         observable.updated = function( object ) {
             dojo.when(object, function ( itemOrArray) {
                 dojo.forEach( [].concat(itemOrArray), this.notify, this );
             };
         };
- 
+
         return observable; // makes `new` optional
     };
 });
- 
- 
+
+
 // decorator consumer
 // a consumer for mylib/UpdatableObservable
- 
+
 define(['mylib/UpdatableObservable'], function ( makeUpdatable ) {
     var observable, updatable, someItem;
     // ... here be code to get or create `observable`
- 
+
     // ... make the observable store updatable
     updatable = makeUpdatable(observable); // `new` is optional!
- 
+
     // ... later, when a cometd message arrives with new data item
     updatable.updated(updatedItem);
 });
@@ -324,7 +318,7 @@ define(['dojo/_base/lang', 'dojo/_base/array'], function (lang, array) {
         }
     });
 });
- 
+
 // adapter consumer
 // 'myapp/my-module':
 define(['mylib/Array'], function ( array ) {
@@ -338,7 +332,7 @@ define(['mylib/Array'], function ( array ) {
 
 #### The Basics ####
 
-Unlike Dojo, jQuery really only comes with one file, however given the plugin-based nature of the library, we can demonstrate how straight-forward it is to define an AMD module that uses it below.
+与Dojo不同，JQuery真正仅仅需要配备一个文件，虽然有了库基于插件的特性，我们仍可以演示定义一个AMD模块并使用它是何等地简单，如下所示：
 
 ```
 define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
@@ -346,15 +340,15 @@ define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
         // Here we've passed in jQuery, the color plugin and Underscore
         // None of these will be accessible in the global scope, but we
         // can easily reference them below.
- 
+
         // Pseudo-randomize an array of colors, selecting the first
         // item in the shuffled array
         var shuffleColor = _.first(_.shuffle(['#666','#333','#111']));
- 
+
         // Animate the background-color of any elements with the class
         // 'item' on the page using the shuffled color
         $('.item').animate({'backgroundColor': shuffleColor });
-        
+
         return {};
         // What we return can be used by other modules
     });
@@ -376,10 +370,10 @@ The named AMD provides a safety blanket of being both robust and safe for most u
 
 ```
 // Account for the existence of more than one global
-// instances of jQuery in the document, cater for testing 
+// instances of jQuery in the document, cater for testing
 // .noConflict()
 
-var jQuery = this.jQuery || "jQuery", 
+var jQuery = this.jQuery || "jQuery",
 $ = this.$ || "$",
 originaljQuery = jQuery,
 original$ = $,
@@ -390,7 +384,7 @@ define(['jquery'] , function ($) {
     return function () {};
 });
 
-// The very easy to implement flag stating support which 
+// The very easy to implement flag stating support which
 // would be used by the AMD loader
 define.amd = {
     jQuery: true
@@ -429,9 +423,8 @@ For more reasons why many developers are opting to use AMD modules in their appl
 ## CommonJS ##
 ## CommonJS ##
 
-> A Module Format Optimized For The Server
-
-> 针对服务器端优化的模块格式
+    > A Module Format Optimized For The Server
+    > 针对服务器端优化的模块格式
 
 CommonJS are a volunteer working group which aim to design, prototype and standardize JavaScript APIs. To date they've attempted to ratify standards for both modules and packages. The CommonJS module proposal specifies a simple API for declaring modules server-side and unlike AMD attempts to cover a broader set of concerns such as io, filesystem, promises and more.
 
@@ -450,58 +443,58 @@ CommonJS是一个志愿者工作组，目标是设计，原型化以及标准化
 ```
 // package/lib is a dependency we require
 var lib = require('package/lib');
- 
+
 // some behaviour for our module
 function foo(){
     lib.log('hello world!');
 }
- 
+
 // export (expose) foo to other modules
 exports.foo = foo;
 ```
 
 ### Basic consumption of exports ###
 ### exports的基本使用 ###
- 
+
 ```
 // define more behaviour we would like to expose
 function foobar(){
         this.foo = function(){
                 console.log('Hello foo');
         }
- 
+
         this.bar = function(){
                 console.log('Hello bar');
         }
 }
- 
+
 // expose foobar to other modules
 exports.foobar = foobar;
- 
- 
+
+
 // an application consuming 'foobar'
- 
+
 // access the module relative to the path
 // where both usage and module files exist
 // in the same directory
- 
+
 var foobar = require('./foobar').foobar,
     test   = new foobar();
- 
+
 test.bar(); // 'Hello bar'
 ```
- 
+
 ### AMD-equivalent Of The First CJS Example ###
 ### 与AMD等价的第一个CJS例子 ###
 
 ```
 define(['package/lib'], function(lib){
- 
+
     // some behaviour for our module
     function foo(){
         lib.log('hello world!');
-    } 
- 
+    }
+
     // export (expose) foo for other modules
     return {
         foobar: foo
@@ -517,11 +510,11 @@ define(['package/lib'], function(lib){
 ```
 var modA = require('./foo');
 var modB = require('./bar');
- 
+
 exports.app = function(){
     console.log('Im an application!');
 }
- 
+
 exports.foo = function(){
     return modA.helloWorld();
 }
@@ -530,11 +523,13 @@ exports.foo = function(){
 #### bar.js ####
 
 ```
-exports.name = 'bar';`
+exports.name = 'bar';
+```
 
 #### foo.js ####
 
-`require('./bar');
+```
+require('./bar');
 exports.helloWorld = function(){
     return 'Hello World!!''
 }
@@ -585,8 +580,8 @@ The concern with a similar naming convention is of course confusion and the comm
 
 ## AMD && CommonJS ##
 ## AMD 和 CommonJS
-> Competing, But Equally Valid Standards
-> 竞争，但都是有根据的标准
+    > Competing, But Equally Valid Standards
+    > 竞争，但都是有根据的标准
 
 虽然这篇文章的重点是使用AMD和CJS，事实上这两种格式都是凑效的、有用的。
 
@@ -601,9 +596,9 @@ Although the idea of yet another module format may be daunting, you may be inter
 
 ```
 define( function (require, exports, module){
-    
+
     var shuffler = require('lib/shuffle');
- 
+
     exports.randomize = function( input ){
         return shuffler.shuffle(input);
     }
@@ -628,7 +623,7 @@ define( function (require, exports, module){
     define('id', function (require, exports) {
         //If have dependencies, get them here
         var a = require('a');
- 
+
         //Attach properties to exports.
         exports.name = value;
     });
@@ -655,18 +650,18 @@ define( function (require, exports, module){
 ```
 // Module/Plugin core
 // Note: the wrapper code you see around the module is what enables
-// us to support multiple module formats and specifications by 
+// us to support multiple module formats and specifications by
 // mapping the arguments defined to what a specific format expects
-// to be present. Our actual module functionality is defined lower 
-// down, where a named module and exports are demonstrated. 
- 
+// to be present. Our actual module functionality is defined lower
+// down, where a named module and exports are demonstrated.
+
 ;(function ( name, definition ){
   var theModule = definition(),
       // this is considered "safe":
       hasDefine = typeof define === 'function' && define.amd,
       // hasDefine = typeof define === 'function',
       hasExports = typeof module !== 'undefined' && module.exports;
- 
+
   if ( hasDefine ){ // AMD Module
     define(theModule);
   } else if ( hasExports ) { // Node.js Module
@@ -679,9 +674,9 @@ define( function (require, exports, module){
     module.plugins = [];
     module.highlightColor = "yellow";
     module.errorColor = "red";
- 
+
   // define the core module here and return the public API
- 
+
   // this is the highlight method used by the core highlightAll()
   // method and all of the plugins highlighting elements different
   // colors
@@ -697,7 +692,7 @@ define( function (require, exports, module){
         module.highlight('div', module.highlightColor);
       }
   };
- 
+
 });
 ```
 
@@ -708,14 +703,14 @@ define( function (require, exports, module){
     var theModule = definition(),
         hasDefine = typeof define === 'function',
         hasExports = typeof module !== 'undefined' && module.exports;
- 
+
     if ( hasDefine ) { // AMD Module
         define(theModule);
     } else if ( hasExports ) { // Node.js Module
         module.exports = theModule;
     } else { // Assign to common namespaces or simply the global object (window)
- 
- 
+
+
         // account for for flat-file/global module extensions
         var obj = null;
         var namespaces = name.split(".");
@@ -729,10 +724,10 @@ define( function (require, exports, module){
             }
             obj = scope[packageName];
         }
- 
+
     }
 })('core.plugin', function () {
- 
+
     // define your module here and return the public API
     // this code could be easily adapted with the core to
     // allow for methods that overwrite/extend core functionality
@@ -745,7 +740,7 @@ define( function (require, exports, module){
             highlight(el, errorColor);
         }
     };
- 
+
 });
 ```
 
@@ -753,24 +748,24 @@ define( function (require, exports, module){
 
 ```
 $(function(){
- 
-    // the plugin 'core' is exposed under a core namespace in 
+
+    // the plugin 'core' is exposed under a core namespace in
     // this example which we first cache
     var core = $.core;
- 
-    // use then use some of the built-in core functionality to 
+
+    // use then use some of the built-in core functionality to
     // highlight all divs in the page yellow
     core.highlightAll();
- 
+
     // access the plugins (extensions) loaded into the 'plugin'
     // namespace of our core module:
- 
+
     // Set the first div in the page to have a green background.
     core.plugin.setGreen("div:first");
     // Here we're making use of the core's 'highlight' method
     // under the hood from a plugin loaded in after it
- 
-    // Set the last div to the 'errorColor' property defined in 
+
+    // Set the last div to the 'errorColor' property defined in
     // our core module/plugin. If you review the code further down
     // you'll see how easy it is to consume properties and methods
     // between the core and other plugins
@@ -779,9 +774,8 @@ $(function(){
 ```
 
 ## ES Harmony ##
-> Modules Of The Future
-
-> 未来的模块
+    > Modules Of The Future
+    > 未来的模块
 
 TC39, the standards body charged with defining the syntax and semantics of ECMAScript and its future iterations is composed of a number of very intelligent developers. Some of these developers (such as Alex Russell) have been keeping a close eye on the evolution of JavaScript usage for large-scale development over the past few years and are acutely aware of the need for better language features for writing more modular JS.
 
@@ -791,7 +785,7 @@ For this reason, there are currently proposals for a number of exciting addition
 
 基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将展示一些在ES.next模块语法的代码示例，你可以先体会到他们会是什么。
 
-> **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
+    > **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
 
 ### Modules With Imports And Exports ###
 
@@ -800,7 +794,7 @@ If you've read through the sections on AMD and CJS modules you may be familiar w
 * **import** declarations bind a module's exports as local variables and may be renamed to avoid name collisions/conflicts.
 
 * **export** declarations declare that a local-binding of a module is externally visible such that other modules may read the exports but can't modify them. Interestingly, modules may export child modules however can't export modules that have been defined elsewhere. You may also rename exports so their external name differs from their local names.
- 
+
 ```
 module staff{
     // specify (public) exports that can be consumed by
@@ -809,22 +803,22 @@ module staff{
         bake: function( item ){
             console.log('Woo! I just baked ' + item);
         }
-    }   
+    }
 }
- 
+
 module skills{
     export var specialty = "baking";
     export var experience = "5 years";
 }
- 
+
 module cakeFactory{
- 
+
     // specify dependencies
     import baker from staff;
- 
+
     // import everything with wildcards
     import * from skills;
- 
+
     export var oven = {
         makeCupcake: function( toppings ){
             baker.bake('cupcake', toppings);
@@ -871,7 +865,7 @@ export function close(hnd) { ... };
 ```
 // compiler/LexicalHandler.js
 module file from 'io/File';
- 
+
 import { open, close } from file;
 export function scan(in) {
     try {
@@ -884,7 +878,7 @@ export function scan(in) {
 ```
 module lexer from 'compiler/LexicalHandler';
 module stdlib from '@std';
- 
+
 //... scan(cmdline[0]) ...
 ```
 
@@ -896,7 +890,7 @@ In Harmony, classes come as part of the language along with constructors and (fi
 
 ```
 class Cake{
- 
+
     // We can define the body of a class' constructor
     // function by using the keyword 'constructor' followed
     // by an argument list of public and private declarations.
@@ -905,39 +899,39 @@ class Cake{
         public cakeSize = cakeSize;
         public toppings = toppings;
         private price = price;
- 
+
     }
- 
+
     // As a part of ES.next's efforts to decrease the unnecessary
     // use of 'function' for everything, you'll notice that it's
     // dropped for cases such as the following. Here an identifier
     // followed by an argument list and a body defines a new method
- 
+
     addTopping( topping ){
         public(this).toppings.push(topping);
     }
- 
+
     // Getters can be defined by declaring get before
     // an identifier/method name and a curly body.
     get allToppings(){
         return public(this).toppings;
     }
- 
+
     get qualifiesForDiscount(){
         return private(this).price > 5;
     }
- 
+
     // Similar to getters, setters can be defined by using
     // the 'set' keyword before an identifier
     set cakeSize( cSize ){
         if( cSize < 0 ){
-            throw new Error('Cake must be a valid size - 
+            throw new Error('Cake must be a valid size -
             either small, medium or large');
         }
         public(this).cakeSize = cSize;
     }
- 
- 
+
+
 }
 ```
 
@@ -954,7 +948,7 @@ As you can see, ES.next is coming with some exciting new additions. Although Tra
 - ES Harmony Class Proposals
 
 ##Conclusions And Further Reading ##
-> A Review
+    > A Review
 
 In this article we've reviewed several of the options available for writing modular JavaScript using modern module formats. These formats have a number of advantages over using the (classical) module pattern alone including: avoiding a need for developers to create global variables for each module they create, better support for static and dynamic dependency management, improved compatibility with script loaders, better (optional) compatibility for modules on the server and more.
 
