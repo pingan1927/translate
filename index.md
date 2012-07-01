@@ -67,7 +67,7 @@ define(
 
 ### 理解AMD: define() ###
 
-`
+```
 // A module_id (myModule) is used here for demonstration purposes only
 define('myModule',
     ['foo', 'bar'], 
@@ -99,7 +99,7 @@ define('myModule',
         }
     };
 });
-`
+```
 
 require on the other hand is typically used to load code in a top-level JavaScript file or within a module should you wish to dynamically fetch dependencies. An example of its usage is:
 
@@ -108,7 +108,8 @@ require on the other hand is typically used to load code in a top-level JavaScri
 ### Understanding AMD: require() ###
 ### 理解AMD:require() ###
 
-`// Consider 'foo' and 'bar' are two external modules
+```
+// Consider 'foo' and 'bar' are two external modules
 // In this example, the 'exports' from the two modules loaded are passed as
 // function arguments to the callback (foo and bar)
 // so that they can similarly be accessed
@@ -116,12 +117,14 @@ require on the other hand is typically used to load code in a top-level JavaScri
 require(['foo', 'bar'], function ( foo, bar ) {
         // rest of your code here
         foo.doSomething();
-});`
+});
+```
 
 ### Dynamically-loaded Dependencies ###
 ### 动态加载的依赖 ###
 
-`define(function ( require ) {
+```
+define(function ( require ) {
     var isReady = false, foobar;
  
     // note the inline require within our module definition
@@ -135,14 +138,16 @@ require(['foo', 'bar'], function ( foo, bar ) {
         isReady: isReady,
         foobar: foobar
     };
-});`
+});
+```
 
 ### Understanding AMD: plugins ###
 ### 理解AMD: 插件 ###
 
 The following is an example of defining an AMD-compatible plugin:
 
-`// With AMD, it's possible to load in assets of almost any kind
+```
+// With AMD, it's possible to load in assets of almost any kind
 // including text-files and HTML. This enables us to have template
 // dependencies which can be used to skin components either on
 // page-load or dynamically.
@@ -152,7 +157,8 @@ define(['./templates', 'text!./template.md','css!./template.css'],
         console.log(templates);
         // do some fun template stuff here.
     }
-});`
+});
+```
 
 > **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
 
@@ -162,31 +168,36 @@ define(['./templates', 'text!./template.md','css!./template.css'],
 
 ### 使用require.js加载AMD模块 ###
 
-`require(['app/myModule'], 
+```
+require(['app/myModule'],
     function( myModule ){
         // start the main module which in-turn
         // loads other modules
         var module = new myModule();
         module.doStuff();
-});`
+});
+```
 
 ### Loading AMD Modules Using curl.js ###
 
 ### 使用curl.js加载AMD模块 ###
 
-`curl(['app/myModule.js'], 
+```
+curl(['app/myModule.js'],
     function( myModule ){
         // start the main module which in-turn
         // loads other modules
         var module = new myModule();
         module.doStuff();
-});`
+});
+```
 
 ### Modules With Deferred Dependencies ###
 
 ### 具备Deferred依赖的模块 ###
 
-`// This could be compatible with jQuery's Deferred implementation,
+```
+// This could be compatible with jQuery's Deferred implementation,
 // futures.js (slightly different syntax) or any one of a number
 // of other implementations
 define(['lib/Deferred'], function( Deferred ){
@@ -197,7 +208,8 @@ define(['lib/Deferred'], function( Deferred ){
         }
     );
     return defer.promise();
-});`
+});
+```
 
 ### Why Is AMD A Better Choice For Writing Modular JavaScript? ###
 
@@ -226,19 +238,23 @@ The AMD Mailing List
 
 在Dojo中定义兼容AMD的模块相当简单。As per above，定义任意模块，依赖放在一个数组中作为第一个参数并且提供一个回调（工厂），一旦依赖加载完毕这个回调将运行这个模块。例如：
 
-`define(["dijit/Tooltip"], function( Tooltip ){
+```
+define(["dijit/Tooltip"], function( Tooltip ){
     //Our dijit tooltip is now available for local use
     new Tooltip(...);
-});`
+});
+```
 
 请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的dojo.require()模块加载器等你习惯的模块加载器使用。
 
 For those wondering about module referencing, there are some interesting gotchas that are useful to know here. Although the AMD-advocated way of referencing modules declares them in the dependency list with a set of matching arguments, this isn't supported by the Dojo 1.6 build system - it really only works for AMD-compliant loaders. e.g:
 
-`define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
+```
+define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
     var cookieValue = cookie("cookieName"); 
     new Tree(...); 
-});`
+});
+```
 
 This has many advances over nested namespacing as modules no longer need to directly reference complete namespaces every time - all we require is the 'dojo/cookie' path in dependencies, which once aliased to an argument, can be referenced by that variable. This removes the need to repeatedly type out 'dojo.' in your applications.
 
@@ -246,10 +262,12 @@ This has many advances over nested namespacing as modules no longer need to dire
 
 The final gotcha to be aware of is that if you wish to continue using the Dojo build system or wish to migrate older modules to this newer AMD-style, the following more verbose version enables easier migration. Notice that dojo and dijit and referenced as dependencies too:
 
-`define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
+```
+define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
     var cookieValue = dojo.cookie("cookieName");
     new dijit.Tooltip(...);
-});`
+});
+```
 
 ### AMD Module Design Patterns (Dojo) ###
 
@@ -259,7 +277,8 @@ Some samples of these patterns can be found below:
 
 #### Decorator pattern: ####
 
-`// mylib/UpdatableObservable: a decorator for dojo/store/Observable
+```
+// mylib/UpdatableObservable: a decorator for dojo/store/Observable
 define(['dojo', 'dojo/store/Observable'], function ( dojo, Observable ) {
     return function UpdatableObservable ( store ) {
  
@@ -289,11 +308,13 @@ define(['mylib/UpdatableObservable'], function ( makeUpdatable ) {
  
     // ... later, when a cometd message arrives with new data item
     updatable.updated(updatedItem);
-});`
+});
+```
 
 #### Adapter pattern ####
 
-`// 'mylib/Array' adapts `each` function to mimic jQuery's:
+```
+// 'mylib/Array' adapts `each` function to mimic jQuery's:
 define(['dojo/_base/lang', 'dojo/_base/array'], function (lang, array) {
     return lang.delegate(array, {
         each: function (arr, lambda) {
@@ -310,7 +331,8 @@ define(['mylib/Array'], function ( array ) {
     array.each(['uno', 'dos', 'tres'], function (i, esp) {
         // here, `this` == item
     });
-});`
+});
+```
 
 ### AMD Modules With jQuery ###
 
@@ -318,7 +340,8 @@ define(['mylib/Array'], function ( array ) {
 
 Unlike Dojo, jQuery really only comes with one file, however given the plugin-based nature of the library, we can demonstrate how straight-forward it is to define an AMD module that uses it below.
 
-`define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
+```
+define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
     function($, colorPlugin, _){
         // Here we've passed in jQuery, the color plugin and Underscore
         // None of these will be accessible in the global scope, but we
@@ -334,7 +357,8 @@ Unlike Dojo, jQuery really only comes with one file, however given the plugin-ba
         
         return {};
         // What we return can be used by other modules
-    });`
+    });
+```
 
 There is however something missing from this example and it's the concept of registration.
 
@@ -350,7 +374,8 @@ The way this works is that the script loader being employed indicates that it su
 
 The named AMD provides a safety blanket of being both robust and safe for most use-cases.
 
-`// Account for the existence of more than one global 
+```
+// Account for the existence of more than one global
 // instances of jQuery in the document, cater for testing 
 // .noConflict()
 
@@ -369,7 +394,8 @@ define(['jquery'] , function ($) {
 // would be used by the AMD loader
 define.amd = {
     jQuery: true
-};`
+};
+```
 
 #### Smarter jQuery Plugins ####
 
@@ -421,7 +447,8 @@ CommonJS是一个志愿者工作组，目标是设计，原型化以及标准化
 ### Understanding CJS: require() and exports ###
 ### 理解CJS: require()以及exports ###
 
-`// package/lib is a dependency we require
+```
+// package/lib is a dependency we require
 var lib = require('package/lib');
  
 // some behaviour for our module
@@ -430,12 +457,14 @@ function foo(){
 }
  
 // export (expose) foo to other modules
-exports.foo = foo;`
+exports.foo = foo;
+```
 
 ### Basic consumption of exports ###
 ### exports的基本使用 ###
  
-`// define more behaviour we would like to expose
+```
+// define more behaviour we would like to expose
 function foobar(){
         this.foo = function(){
                 console.log('Hello foo');
@@ -459,12 +488,14 @@ exports.foobar = foobar;
 var foobar = require('./foobar').foobar,
     test   = new foobar();
  
-test.bar(); // 'Hello bar'`
+test.bar(); // 'Hello bar'
+```
  
 ### AMD-equivalent Of The First CJS Example ###
 ### 与AMD等价的第一个CJS例子 ###
 
-`define(['package/lib'], function(lib){
+```
+define(['package/lib'], function(lib){
  
     // some behaviour for our module
     function foo(){
@@ -475,14 +506,16 @@ test.bar(); // 'Hello bar'`
     return {
         foobar: foo
     };
-});`
+});
+```
 
 ### Consuming Multiple Dependencies ###
 ### 使用多个依赖 ###
 
 #### app.js ####
 
-`var modA = require('./foo');
+```
+var modA = require('./foo');
 var modB = require('./bar');
  
 exports.app = function(){
@@ -491,18 +524,21 @@ exports.app = function(){
  
 exports.foo = function(){
     return modA.helloWorld();
-}`
+}
+```
 
 #### bar.js ####
 
-`exports.name = 'bar';`
+```
+exports.name = 'bar';`
 
 #### foo.js ####
 
 `require('./bar');
 exports.helloWorld = function(){
     return 'Hello World!!''
-}`
+}
+```
 
 ### What Loaders & Frameworks Support CJS? ###
 ### 那些加载器和框架支持CJS？ ###
@@ -563,19 +599,22 @@ Although the idea of yet another module format may be daunting, you may be inter
 ### Basic AMD Hybrid Format (John Hann) ###
 ### 基本的AMD混合格式 ###
 
-`define( function (require, exports, module){
+```
+define( function (require, exports, module){
     
     var shuffler = require('lib/shuffle');
  
     exports.randomize = function( input ){
         return shuffler.shuffle(input);
     }
-});`
+});
+```
 
 ### AMD/CommonJS Universal Module Definition (Variation 2, UMDjs) ###
 ### AMD/CommonJS 统一模块定义（变种2， UMDjs） ###
 
-`/**
+```
+/**
  * exports object based version, if you need to make a
  * circular dependency or need compatibility with
  * commonjs-like environments that are not Node.
@@ -605,14 +644,16 @@ Although the idea of yet another module format may be daunting, you may be inter
             return window[value];
         }, (window[id] = {}));
     }
-}));`
+}));
+```
 
 ### Extensible UMD Plugins With (Variation by myself and Thomas Davis). ###
 ### 可扩展的UMD插件 ###
 
 #### core.js ####
 
-`// Module/Plugin core
+```
+// Module/Plugin core
 // Note: the wrapper code you see around the module is what enables
 // us to support multiple module formats and specifications by 
 // mapping the arguments defined to what a specific format expects
@@ -657,11 +698,13 @@ Although the idea of yet another module format may be daunting, you may be inter
       }
   };
  
-});`
+});
+```
 
 #### myExtension.js ####
 
-`;(function ( name, definition ) {
+```
+;(function ( name, definition ) {
     var theModule = definition(),
         hasDefine = typeof define === 'function',
         hasExports = typeof module !== 'undefined' && module.exports;
@@ -703,11 +746,13 @@ Although the idea of yet another module format may be daunting, you may be inter
         }
     };
  
-});`
+});
+```
 
 #### app.js ####
 
-`$(function(){
+```
+$(function(){
  
     // the plugin 'core' is exposed under a core namespace in 
     // this example which we first cache
@@ -730,7 +775,8 @@ Although the idea of yet another module format may be daunting, you may be inter
     // you'll see how easy it is to consume properties and methods
     // between the core and other plugins
     core.plugin.setRed('div:last');
-});`
+});
+```
 
 ## ES Harmony ##
 > Modules Of The Future
@@ -755,7 +801,8 @@ If you've read through the sections on AMD and CJS modules you may be familiar w
 
 * **export** declarations declare that a local-binding of a module is externally visible such that other modules may read the exports but can't modify them. Interestingly, modules may export child modules however can't export modules that have been defined elsewhere. You may also rename exports so their external name differs from their local names.
  
-`module staff{
+```
+module staff{
     // specify (public) exports that can be consumed by
     // other modules
     export var baker = {
@@ -786,35 +833,43 @@ module cakeFactory{
             baker.bake('muffin', size);
         }
     }
-}`
+}
+```
 
 ### Modules Loaded From Remote Sources ###
 ### 从远程源加载的模块 ###
 
 The module proposals also cater for modules which are remotely based (e.g. a third-party API wrapper) making it simplistic to load modules in from external locations. Here's an example of us pulling in the module we defined above and utilizing it:
 
-`module cakeFactory from 'http://addyosmani.com/factory/cakes.js';
+```
+module cakeFactory from 'http://addyosmani.com/factory/cakes.js';
 cakeFactory.oven.makeCupcake('sprinkles');
-cakeFactory.oven.makeMuffin('large');`
+cakeFactory.oven.makeMuffin('large');
+```
 
 ### Module Loader API ###
 
 The module loader proposed describes a dynamic API for loading modules in highly controlled contexts. Signatures supported on the loader include load( url, moduleInstance, error) for loading modules, createModule( object, globalModuleReferences) and others. Here's another example of us dynamically loading in the module we initially defined. Note that unlike the last example where we pulled in a module from a remote source, the module loader API is better suited to dynamic contexts.
 
-`Loader.load('http://addyosmani.com/factory/cakes.js',
+```
+Loader.load('http://addyosmani.com/factory/cakes.js',
     function(cakeFactory){
         cakeFactory.oven.makeCupcake('chocolate');
-    });`
+    });
+```
 
 ### CommonJS-like Modules For The Server ###
 
 For developers who are server-oriented, the module system proposed for ES.next isn't just constrained to looking at modules in the browser. Below for examples, you can see a CJS-like module proposed for use on the server:
 
-`// io/File.js
+```
+// io/File.js
 export function open(path) { ... };
-export function close(hnd) { ... };`
+export function close(hnd) { ... };
+```
 
-`// compiler/LexicalHandler.js
+```
+// compiler/LexicalHandler.js
 module file from 'io/File';
  
 import { open, close } from file;
@@ -823,12 +878,15 @@ export function scan(in) {
         var h = open(in) ...
     }
     finally { close(h) }
-}`
+}
+```
 
-`module lexer from 'compiler/LexicalHandler';
+```
+module lexer from 'compiler/LexicalHandler';
 module stdlib from '@std';
  
-//... scan(cmdline[0]) ...`
+//... scan(cmdline[0]) ...
+```
 
 ### Classes With Constructors, Getters & Setters ###
 
@@ -836,7 +894,8 @@ The notion of a class has always been a contentious issue with purists and we've
 
 In Harmony, classes come as part of the language along with constructors and (finally) some sense of true privacy. In the following examples, I've included some inline comments to help you understand how classes are structured, but you may also notice the lack of the word 'function' in here. This isn't a typo error: TC39 have been making a conscious effort to decrease our abuse of the function keyword for everything and the hope is that this will help simplify how we write code.
 
-`class Cake{
+```
+class Cake{
  
     // We can define the body of a class' constructor
     // function by using the keyword 'constructor' followed
@@ -879,7 +938,8 @@ In Harmony, classes come as part of the language along with constructors and (fi
     }
  
  
-}`
+}
+```
 
 ### ES Harmony Conclusions ###
 
