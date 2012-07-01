@@ -1,6 +1,6 @@
 # Writing Modular JavaScript With AMD, CommonJS & ES Harmony #
 
-# 用AMD，CommonJS 和 ES Harmony编写模块化的JavaScript #
+# 用AMD，CommonJS 和 ES Harmony编写¬¬模块化的JavaScript #
 
 ## Modularity  ##
 
@@ -8,62 +8,64 @@
 
 > The Importance Of Decoupling Your Application
 
-> 应用解耦的重要性
+> 解耦你的程序的重要性
 
 When we say an application is modular, we generally mean it's composed of a set of highly decoupled, distinct pieces of functionality stored in modules. As you probably know, [loose coupling](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/) facilitates easier maintainability of apps by removing dependencies where possible. When this is implemented efficiently, its quite easy to see how changes to one part of a system may affect another.
 
-当我们说一（某）个应用是模块化的，我们通常是指它是由一组存储于模块中高度解耦的、具有不同功能的独立片段组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖从而更易利于应用程序的可维护性。当模块化有效地被实现时，可以很容易地观察到系统的某一部分是如何影响到另一部分的。
+当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
 Unlike some more traditional programming languages however, the current iteration of JavaScript ([ECMA-262](http://www.ecma-international.org/publications/standards/Ecma-262.htm)) doesn't provide developers with the means to import such modules of code in a clean, organized manner. It's one of the concerns with specifications that haven't required great thought until more recent years where the need for more organized JavaScript applications became apparent.
 
-然而与传统的编程语言不用的是，当前版本的JavaScript（[ECMA-262]）并没有为程序员提供一个清晰的，格式良好的导入类似模块的方法。这是规范中一个关注点，之前并不需要非常伟大的想法，直到最近几年对有组织的JavaScript应用的需求变得愈加明显。
+然而与传统的编程语言不用的是，当前版本的JavaScript（[ECMA-262]）并没有为提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
 
 Instead, developers at present are left to fall back on variations of the [module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code) patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it's still possible to incur naming collisions in your architecture. There's also no clean way to handle dependency management without some manual effort or third party tools.
 
-取而代之的是，目前的开发者仍然只能回到使用模块或者对象字面量的变化上。*在这当中，模块脚本被一个单一全局对象命名空间在Dom中被串联起来*，这也不是一个合理的处理依赖管理的聪明的方式在缺少一些人工的处理或者第三方工具。
+然而，当前的开发者仍然只能回到使用模块或者对象字面量模式等替代方法上。*在这当中，模块脚本被一个单一全局对象命名空间在Dom中被串联起来*。在缺少一些人工的处理或者第三方工具时，这也不是一个合理的处理依赖管理的方式。
 
 Whilst native solutions to these problems will be arriving in [ES Harmony](http://wiki.ecmascript.org/doku.php?id=harmony:modules), the good news is that writing modular JavaScript has never been easier and you can start doing it today.
 
-虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是简单的但你可以从今天开始做这些工作。
+虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是容易的但你可以从今天开始做这件事情。
 
 In this article, we're going to look at three formats for writing modular JavaScript: **AMD**, **CommonJS** and proposals for the next version of JavaScript, **Harmony**.
 
-在这篇文章中，我们会观察三种编写模块化JavaScript的方式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
+在这篇文章中，我们会观察三种编写模块化JavaScript的格式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
 
 ## Prelude ##
 ## 前奏 ##
 > A Note On Script Loaders
-> 关于脚本加载器的笔记
+> 关于脚本加载器的注解
 
 It's difficult to discuss AMD and CommonJS modules without talking about the elephant in the room - [script loaders](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261). At present, script loading is a means to a goal, that goal being modular JavaScript that can be used in applications today - for this, use of a compatible script loader is unfortunately necessary. In order to get the most out of this article, I recommend gaining a basic understanding of how popular script loading tools work so the explanations of module formats make sense in context.
 
-很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是一个目标的方式，这个目标是模块化JavaScript使之能够在今天的程序中被使用。对于这一点，很遗憾，使用兼容的脚本加载器是必要的。为了更好的理解本文，我建议先对流行的脚本加载工具是如何工作做一个基本的了解从而在上下文中对模块格式的解释有意义。
+很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
 
 There are a number of great loaders for handling module loading in the AMD and CJS formats, but my personal preferences are [RequireJS](http://requirejs.org/) and [curl.js](https://github.com/unscriptable/curl). Complete tutorials on these tools are outside the scope of this article, but I can recommend reading John Hann's post about [curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/) and James Burke's [RequireJS](http://requirejs.org/docs/api.html) API documentation for more.
 
-在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择事是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围，但我强烈建议阅读John Hann关于curl.js的文章以及James Burke的RequireJS的API文档以了解更多。
+在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但我强烈建议阅读John Hann关于curl.js的文章以及James Burke的RequireJS的API文档以了解更多。
 
 From a production perspective, the use of optimization tools (like the RequireJS optimizer) to concatenate scripts is recommended for deployment when working with such modules. Interestingly, with the [Almond](https://github.com/jrburke/almond) AMD shim, RequireJS doesn't need to be rolled in the deployed site and what you might consider a script loader can be easily shifted outside of development.
 
-从一个产品的角度来讲，在与这些模块一起工作时，优化工具的使用（例如RequireJS优化器）用来串联脚本非常值得在部署的时候推荐。非常有趣地是，配合Almond AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的转变为开发环境。
+从生产角度来看，在与这些模块一起工作时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时非常值得推荐。有趣地是，配合Almond AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的切换到开发环境。
 
 That said, James Burke would probably say that being able to dynamically load scripts after page load still has its use cases and RequireJS can assist with this too. With these notes in mind, let's get started.
 
+也就是说，James Burke有可能会，将这些笔记记在脑子里，让我们开始吧。
+
 ## AMD ##
 > A Format For Writing Modular JavaScript In The Browser
-> 浏览器端编写模块化JavaScript规范
+> 在浏览器端编写模块化JavaScript格式
 
 The overall goal for the AMD (Asynchronous Module Definition) format is to provide a solution for modular JavaScript that developers can use today. It was born out of Dojo's real world experience using XHR+eval and proponents of this format wanted to avoid any future solutions suffering from the weaknesses of those in the past.
 
-AMD（异步模块定义）规范的总体目标是为程序员提供一个当今可以使用的模块化JavaScript解决方案。*它诞生于Dojo的使用XHR+ eval真实经验，这个规范的支持者希望未来的解决方案避免那些在过去的遭遇到的弱点*
+AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
 The AMD module format itself is a proposal for defining modules where both the module and dependencies can be [asynchronously](http://dictionary.reference.com/browse/asynchronous) loaded. It has a number of distinct advantages including being both asynchronous and highly flexible by nature which removes the tight coupling one might commonly find between code and module identity. Many developers enjoy using it and one could consider it a reliable stepping stone towards the [module system](http://wiki.ecmascript.org/doku.php?id=harmony:modules) proposed for ES Harmony.
 
-AMD模块规范本身是一个提案，用于定义模块，使模块以及依赖都可以被异步加载。它有一系列的明显的优点，包括两者都是异步的以及高度灵活的
+AMD模块格式本身是一个提议，用于定义模块使模块以及依赖都可以被异步加载。它有一系列显著的优势，包括两者都是异步的以及删除一般在代码和模块识别之间可能的高耦合性天生的高度灵活性。许多开发者喜欢使用它并且认为这是一个被提及的面向ES Harmony模块系统的可靠的跳板。
 
 AMD began as a draft specification for a module format on the CommonJS list but as it wasn't able to reach full concensus, further development of the format moved to the [amdjs](https://github.com/amdjs) group.
 
-AMD最开始作为一个CommonJS目录中的模块格式的规范草案，但是由于它无法完全达成共识，格式的进一步发展就是提出一个amdjs组。
+AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了amdjs组。
 
 Today it's embraced by projects including Dojo (1.7), MooTools (2.0), Firebug (1.8) and even jQuery (1.7). Although the term CommonJS AMD format has been seen in the wild on occasion, it's best to refer to it as just AMD or Async Module support as not all participants on the CJS list wished to pursue it.
 

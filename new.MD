@@ -1,69 +1,42 @@
-# Writing Modular JavaScript With AMD, CommonJS & ES Harmony #
-
 # 用AMD，CommonJS 和 ES Harmony编写模块化的JavaScript #
-
-## Modularity  ##
 
 ## 模块化 ##
 
-> The Importance Of Decoupling Your Application
+> 解耦你的程序的重要性
 
-> 应用解耦的重要性
+当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
-When we say an application is modular, we generally mean it's composed of a set of highly decoupled, distinct pieces of functionality stored in modules. As you probably know, [loose coupling](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/) facilitates easier maintainability of apps by removing dependencies where possible. When this is implemented efficiently, its quite easy to see how changes to one part of a system may affect another.
-
-当我们说一（某）个应用是模块化的，我们通常是指它是由一组存储于模块中高度解耦的、具有不同功能的独立片段组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖从而更易利于应用程序的可维护性。当模块化有效地被实现时，可以很容易地观察到系统的某一部分是如何影响到另一部分的。
-
-Unlike some more traditional programming languages however, the current iteration of JavaScript ([ECMA-262](http://www.ecma-international.org/publications/standards/Ecma-262.htm)) doesn't provide developers with the means to import such modules of code in a clean, organized manner. It's one of the concerns with specifications that haven't required great thought until more recent years where the need for more organized JavaScript applications became apparent.
-
-然而与传统的编程语言不用的是，当前版本的JavaScript（[ECMA-262]）并没有为程序员提供一个清晰的，格式良好的导入类似模块的方法。这是规范中一个关注点，之前并不需要非常伟大的想法，直到最近几年对有组织的JavaScript应用的需求变得愈加明显。
+然而与传统的编程语言不用的是，当前版本的JavaScript（[ECMA-262]）并没有为提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
 
 Instead, developers at present are left to fall back on variations of the [module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code) patterns. With many of these, module scripts are strung together in the DOM with namespaces being described by a single global object where it's still possible to incur naming collisions in your architecture. There's also no clean way to handle dependency management without some manual effort or third party tools.
 
-取而代之的是，目前的开发者仍然只能回到使用模块或者对象字面量的变化上。*在这当中，模块脚本被一个单一全局对象命名空间在Dom中被串联起来*，这也不是一个合理的处理依赖管理的聪明的方式在缺少一些人工的处理或者第三方工具。
+取而代之的是，在当前开发者仍然只能回到使用模块或者对象字面量模式等替代方法上。*在这当中，模块脚本被一个单一全局对象命名空间在Dom中被串联起来*。在缺少一些人工的处理或者第三方工具时，这也不是一个合理的处理依赖管理的方式。
 
-Whilst native solutions to these problems will be arriving in [ES Harmony](http://wiki.ecmascript.org/doku.php?id=harmony:modules), the good news is that writing modular JavaScript has never been easier and you can start doing it today.
+虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是容易的但你可以从今天开始做这件事情。
 
-虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是简单的但你可以从今天开始做这些工作。
+在这篇文章中，我们会观察三种编写模块化JavaScript的格式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
 
-In this article, we're going to look at three formats for writing modular JavaScript: **AMD**, **CommonJS** and proposals for the next version of JavaScript, **Harmony**.
-
-在这篇文章中，我们会观察三种编写模块化JavaScript的方式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
-
-## Prelude ##
 ## 前奏 ##
-> A Note On Script Loaders
-> 关于脚本加载器的笔记
 
-It's difficult to discuss AMD and CommonJS modules without talking about the elephant in the room - [script loaders](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261). At present, script loading is a means to a goal, that goal being modular JavaScript that can be used in applications today - for this, use of a compatible script loader is unfortunately necessary. In order to get the most out of this article, I recommend gaining a basic understanding of how popular script loading tools work so the explanations of module formats make sense in context.
+> 关于脚本加载器的说明
 
-很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是一个目标的方式，这个目标是模块化JavaScript使之能够在今天的程序中被使用。对于这一点，很遗憾，使用兼容的脚本加载器是必要的。为了更好的理解本文，我建议先对流行的脚本加载工具是如何工作做一个基本的了解从而在上下文中对模块格式的解释有意义。
+很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
 
-There are a number of great loaders for handling module loading in the AMD and CJS formats, but my personal preferences are [RequireJS](http://requirejs.org/) and [curl.js](https://github.com/unscriptable/curl). Complete tutorials on these tools are outside the scope of this article, but I can recommend reading John Hann's post about [curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/) and James Burke's [RequireJS](http://requirejs.org/docs/api.html) API documentation for more.
+在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但我强烈建议阅读John Hann关于curl.js的文章以及James Burke的RequireJS的API文档以了解更多。
 
-在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择事是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围，但我强烈建议阅读John Hann关于curl.js的文章以及James Burke的RequireJS的API文档以了解更多。
+从生产角度来看，在与这些模块一起工作时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时非常值得推荐。有趣地是，配合Almond AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的切换到开发环境。
 
-From a production perspective, the use of optimization tools (like the RequireJS optimizer) to concatenate scripts is recommended for deployment when working with such modules. Interestingly, with the [Almond](https://github.com/jrburke/almond) AMD shim, RequireJS doesn't need to be rolled in the deployed site and what you might consider a script loader can be easily shifted outside of development.
-
-从一个产品的角度来讲，在与这些模块一起工作时，优化工具的使用（例如RequireJS优化器）用来串联脚本非常值得在部署的时候推荐。非常有趣地是，配合Almond AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的转变为开发环境。
-
-That said, James Burke would probably say that being able to dynamically load scripts after page load still has its use cases and RequireJS can assist with this too. With these notes in mind, let's get started.
+也就是说，James Burke有可能会，将这些笔记记在脑子里，让我们开始吧。
 
 ## AMD ##
-> A Format For Writing Modular JavaScript In The Browser
-> 浏览器端编写模块化JavaScript规范
 
-The overall goal for the AMD (Asynchronous Module Definition) format is to provide a solution for modular JavaScript that developers can use today. It was born out of Dojo's real world experience using XHR+eval and proponents of this format wanted to avoid any future solutions suffering from the weaknesses of those in the past.
+> 一个在浏览器端编写模块化JavaScript的格式
 
-AMD（异步模块定义）规范的总体目标是为程序员提供一个当今可以使用的模块化JavaScript解决方案。*它诞生于Dojo的使用XHR+ eval真实经验，这个规范的支持者希望未来的解决方案避免那些在过去的遭遇到的弱点*
+AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
-The AMD module format itself is a proposal for defining modules where both the module and dependencies can be [asynchronously](http://dictionary.reference.com/browse/asynchronous) loaded. It has a number of distinct advantages including being both asynchronous and highly flexible by nature which removes the tight coupling one might commonly find between code and module identity. Many developers enjoy using it and one could consider it a reliable stepping stone towards the [module system](http://wiki.ecmascript.org/doku.php?id=harmony:modules) proposed for ES Harmony.
+AMD模块格式本身是一个提议，用于定义模块使模块以及依赖都可以被异步加载。它有一系列显著的优势，包括两者都是异步的以及删除一般在代码和模块识别之间可能的高耦合性天生的高度灵活性。许多开发者喜欢使用它并且认为这是一个被提及的面向ES Harmony模块系统的可靠的跳板。
 
-AMD模块规范本身是一个提案，用于定义模块，使模块以及依赖都可以被异步加载。它有一系列的明显的优点，包括两者都是异步的以及高度灵活的
-
-AMD began as a draft specification for a module format on the CommonJS list but as it wasn't able to reach full concensus, further development of the format moved to the [amdjs](https://github.com/amdjs) group.
-
-AMD最开始作为一个CommonJS目录中的模块格式的规范草案，但是由于它无法完全达成共识，格式的进一步发展就是提出一个amdjs组。
+AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了amdjs组。
 
 Today it's embraced by projects including Dojo (1.7), MooTools (2.0), Firebug (1.8) and even jQuery (1.7). Although the term CommonJS AMD format has been seen in the wild on occasion, it's best to refer to it as just AMD or Async Module support as not all participants on the CJS list wished to pursue it.
 
@@ -71,62 +44,50 @@ Today it's embraced by projects including Dojo (1.7), MooTools (2.0), Firebug (1
 
 > **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
 
+> **说明：** .。。。
+
 ### Getting Started With Modules ###
 ### 模块入门 ###
 
-The two key concepts you need to be aware of here are the idea of a `define` method for facilitating module definition and a `require` method for handling dependency loading. *define* is used to define named or unnamed modules based on the proposal using the following signature:
+在这里需要关注的两个关键概念是用于促进模块定义的define方法以及用于处理依赖加载的require方法。根据提议，define使用以下签名明码来定义命名的或者未命名的模块：
 
-在这里你需要关注的两个关键概念是用于促进模块定义的define方法以及用于处理依赖加载的require方法。提案这提案，define使用以下格式来定义命名的或者未命名的模块：
-
-`define(
+`
+define(
     module_id /*optional*/, 
-
-    [dependencies] /*optional*/, 
-
+    [dependencies] /*optional*/,
     definition function /*function for instantiating the module or object*/
-);`
+);
+`
 
-As you can tell by the inline comments, the module_id is an optional argument which is typically only required when non-AMD concatenation tools are being used (there may be some other edge cases where it's useful too). When this argument is left out, we call the module anonymous.
+正如你在行内注释了解到的一样，module_id是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
 
-正如你在行内注释了解到的一样，module_id是一个可选的参数，这个参数通常是在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当这个参数被舍弃时，我们称它为匿名模块。
+当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过使模块碎片化来避免文件名和代码的复制。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下module_id相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器在CommonJS例如r.js环境下工作。
 
-When working with anonymous modules, the idea of a module's identity is DRY, making it trivial to avoid duplication of filenames and code. Because the code is more portable, it can be easily moved to other locations (or around the file-system) without needing to alter the code itself or change its ID. The module_id is equivalent to folder paths in simple packages and when not used in packages. Developers can also run the same code on multiple environments just by using an AMD optimizer that works with a CommonJS environment such as r.js.
-
-当我们用匿名模块工作时，识别某个模块的思想就是DRY（Don't Repeat Yourself)，通过是模块碎片化来避免文件名和代码的复制。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者改变代码的ID。在简单的包中或者包中不使用时module_id相当于文件路径。程序员可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器在CommonJS例如r.js环境下工作。
-
-Back to the define signature, the dependencies argument represents an array of dependencies which are required by the module you are defining and the third argument ('definition function') is a function that's executed to instantiate your module. A barebone module could be defined as follows:
-
-回到define定义上，dependencies参数代表一个依赖数组，这个依赖数组是你定义的模块所需要的。第三个参数（'definition function'）是一个函数用来执行你的模块的实例化工作。一个标准的模块会被定义成以下形式：
-
-### Understanding AMD: define() ###
+回到define定义上，dependencies参数表现为一个依赖数组，这个依赖数组是你定义的模块所需要的。第三个参数（'definition function'）则是一个函数，用来执行模块的实例化工作。一个标准的模块应该被定义成以下形式：
 
 ### 理解AMD: define() ###
 
-`// A module_id (myModule) is used here for demonstration purposes only
- 
-define('myModule', 
+`
+// A module_id (myModule) is used here for demonstration purposes only
+define('myModule',
     ['foo', 'bar'], 
     // module definition function
     // dependencies (foo and bar) are mapped to function parameters
     function ( foo, bar ) {
         // return a value that defines the module export
         // (i.e the functionality we want to expose for consumption)
-    
         // create your module here
         var myModule = {
             doStuff:function(){
                 console.log('Yay! Stuff');
             }
         }
- 
         return myModule;
 });
- 
 // An alternative example could be..
 define('myModule', 
     ['math', 'graph'], 
     function ( math, graph ) {
- 
         // Note that this is a slightly different pattern
         // With AMD, it's possible to define modules in a few
         // different ways due as it's relatively flexible with
@@ -137,11 +98,12 @@ define('myModule',
             }
         }
     };
-});`
+});
+`
 
 require on the other hand is typically used to load code in a top-level JavaScript file or within a module should you wish to dynamically fetch dependencies. An example of its usage is:
 
-require从另外一个角度讲通常用于加载处于最高层JavaScript文件的代码或者在模块内部你希望能够动态处理依赖。一个使用的例子如下：
+另一方面，require通常用于加载处于顶层的JavaScript文件代码或你希望的在模块内部动态地获取依赖。一个使用的例子如下：
 
 ### Understanding AMD: require() ###
 ### 理解AMD:require() ###
@@ -194,7 +156,7 @@ define(['./templates', 'text!./template.md','css!./template.css'],
 
 > **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
 
-> **Note**: 尽管在上面的例子中为了加载css依赖从而将css!包括进来，重要的是要记住这种方法存在许多注意事项，例如当CSS完全加载时并不会完全渲染出来。这依赖于你构建的过程，**待写**
+> **Note**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的过程，**待写**
 
 ### Loading AMD Modules Using require.js ###
 
@@ -241,19 +203,15 @@ define(['lib/Deferred'], function( Deferred ){
 
 ### 为什么说AMD是编写模块化的JavaScript的好选择？ ###
 
-- Provides a clear proposal for how to approach defining flexible modules.
-- Significantly cleaner than the present global namespace and **script** tag solutions many of us rely on. There's a clean way to declare stand-alone modules and dependencies they may have.
-- Module definitions are encapsulated, helping us to avoid pollution of the global namespace.
-- Works better than some alternative solutions (eg. CommonJS, which we'll be looking at shortly). Doesn't have issues with cross-domain, local or debugging and doesn't have a reliance on server-side tools to be used. Most AMD loaders support loading modules in the browser without a build process.
-- Provides a 'transport' approach for including multiple modules in a single file. Other approaches like CommonJS have yet to agree on a transport format.
-- It's possible to lazy load scripts if this is needed.
-
-- 提供了一个清晰的方式用于如何定义灵活的模块
-- 语法比目前的全局命名空间以及**&amp;script&amp;**标签清晰
-- 模块定义是封装过的，帮助我们避免全局命名空间的污染
-- 
+- 为如何处理定义灵活的模块提供了一个明确的建议。
+- 语法比目前我们依靠的全局命名空间以及**&amp;script&amp;**标签等解决方案清晰。有一个干净的方式用来声明独立的模块以及可能的依赖。
+- 模块定义是经过封装的，帮助我们避免污染全局命名空间。
+- 比起其他可选的解决方案（例如很快会介绍的CommonJS）工作得更好。在跨域、本地、以及debug方面没有问题。使用时不需要依赖服务器端的工具。大多数AMD的加载器在浏览器端加载模块时并不需要build过程。
+- 提供了 'transport'方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
+- 当需要是可以懒加载脚本。
 
 ### Related Reading ###
+### 相关阅读 ###
 The RequireJS Guide To AMD
 What's the fastest way to load AMD modules?
 AMD vs. CJS, what's the better format?
@@ -264,15 +222,16 @@ On Inventing JavaScript Module Formats And Script Loaders
 The AMD Mailing List
 
 ### AMD Modules With Dojo ###
+### AMD模块和Dojo ###
 
-Defining AMD-compatible modules using Dojo is fairly straight-forward. As per above, define any module dependencies in an array as the first argument and provide a callback (factory) which will execute the module once the dependencies have been loaded. e.g:
+在Dojo中定义兼容AMD的模块相当简单。As per above，定义任意模块，依赖放在一个数组中作为第一个参数并且提供一个回调（工厂），一旦依赖加载完毕这个回调将运行这个模块。例如：
 
 `define(["dijit/Tooltip"], function( Tooltip ){
     //Our dijit tooltip is now available for local use
     new Tooltip(...);
 });`
 
-Note the anonymous nature of the module which can now be both consumed by a Dojo asynchronous loader, RequireJS or the standard dojo.require() module loader that you may be used to using.
+请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的dojo.require()模块加载器等你习惯的模块加载器使用。
 
 For those wondering about module referencing, there are some interesting gotchas that are useful to know here. Although the AMD-advocated way of referencing modules declares them in the dependency list with a set of matching arguments, this isn't supported by the Dojo 1.6 build system - it really only works for AMD-compliant loaders. e.g:
 
@@ -433,6 +392,7 @@ I've recently discussed some ideas and examples of how jQuery plugins could be w
 - PINF http://github.com/pinf/loader-js
 
 ### AMD Conclusions ###
+### AMD 结论 ###
 
 The above are very trivial examples of just how useful AMD modules can truly be, but they hopefully provide a foundation for understanding how they work.
 
@@ -445,22 +405,18 @@ For more reasons why many developers are opting to use AMD modules in their appl
 
 > A Module Format Optimized For The Server
 
-> 针对服务器端优化后的模块规范
+> 针对服务器端优化的模块格式
 
 CommonJS are a volunteer working group which aim to design, prototype and standardize JavaScript APIs. To date they've attempted to ratify standards for both modules and packages. The CommonJS module proposal specifies a simple API for declaring modules server-side and unlike AMD attempts to cover a broader set of concerns such as io, filesystem, promises and more.
 
-CommonJS是一个志愿的工作组，它的目的是设计，原型化和标准化Javascript的API。迄今为止，他们以及尝试批准模块以及包的标准。CommonJS模块的提案倡导在服务器端声明模块时提供一个简单的API而不像AMD尝试覆盖了更广泛的关注点，例如io，文件系统，promise以及更多。
+CommonJS是一个志愿者工作组，目标是设计，原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了模块以及包标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖了更广泛的关注点，例如io，文件系统，promise等。
 
 ### Getting Started ###
 ### 入门 ###
 
-From a structure perspective, a CJS module is a reusable piece of JavaScript which exports specific objects made available to any dependent code - there are typically no function wrappers around such modules (so you won't see define used here for example).
+从结构的视图来看，CJS模块是可重复使用的JavaScript片段，其中exports提供具体的对象，使之对任何独立的代码都是可用的 - 通常这样的模块没有函数包装（所以你不会看到例如define的使用）。
 
-从结构的视图来看，CJS模块是可重复使用的JavaScript片段，其中exports提供特定对象，使之对任何独立的代码都是可用的 - 通常这样模块没有函数包装（所以你不会看到例如定义的使用）。
-
-At a high-level they basically contain two primary parts: a free variable named exports which contains the objects a module wishes to make available to other modules and a require function that modules can use to import the exports of other modules.
-
-在高层次，他们基本上包含两个主要部分：一个自由变量命名为exports，其中包含模块对象，希望提供给其他模块和需要功能模块，可以使用导入其他模块的出口。
+从更高层次来说，它们基本上仅包含两个主要部分：一个包含模块对象的自由变量命名为exports，提供给其他模块；一个require函数，模块可以通过require导入其它模块。
 
 ### Understanding CJS: require() and exports ###
 ### 理解CJS: require()以及exports ###
@@ -477,6 +433,7 @@ function foo(){
 exports.foo = foo;`
 
 ### Basic consumption of exports ###
+### exports的基本使用 ###
  
 `// define more behaviour we would like to expose
 function foobar(){
@@ -505,6 +462,7 @@ var foobar = require('./foobar').foobar,
 test.bar(); // 'Hello bar'`
  
 ### AMD-equivalent Of The First CJS Example ###
+### 与AMD等价的第一个CJS例子 ###
 
 `define(['package/lib'], function(lib){
  
@@ -520,6 +478,7 @@ test.bar(); // 'Hello bar'`
 });`
 
 ### Consuming Multiple Dependencies ###
+### 使用多个依赖 ###
 
 #### app.js ####
 
@@ -546,6 +505,7 @@ exports.helloWorld = function(){
 }`
 
 ### What Loaders & Frameworks Support CJS? ###
+### 那些加载器和框架支持CJS？ ###
 
 #### In-browser: ####
 
@@ -562,12 +522,15 @@ exports.helloWorld = function(){
 - Wakandahttp://www.wakandasoft.com/
 
 ### Is CJS Suitable For The Browser? ###
+### CJS适合浏览器吗？ ###
 
 There are developers that feel CommonJS is better suited to server-side development which is one reason there's currently a level of **disagreement** over which format should and will be used as the de facto standard in the pre-Harmony age moving forward. Some of the arguments against CJS include a note that many CommonJS APIs address server-oriented features which one would simply not be able to implement at a browser-level in JavaScript - for example, io, system and js could be considered unimplementable by the nature of their functionality.
 
-
+许多开发者认为CommonJS更适合服务器端开发，其中一个原因是*** 在前Harmony时代的一个事实上的标准。反对CJS的观点包括CommonJS的API符合服务器端的特性但是在浏览器端基本不能实现。例如，io，系统以及js可以认为实际上无法实现它们的功能。
 
 That said, it's useful to know how to structure CJS modules regardless so that we can better appreciate how they fit in when defining modules which may be used everywhere. Modules which have applications on both the client and server include validation, conversion and templating engines. The way some developers are approaching choosing which format to use is opting for CJS when a module can be used in a server-side environment and using AMD if this is not the case.
+
+有种说法，了解CJS模块的结构是非常有用的，当定义可以更好地鉴别他们
 
 As AMD modules are capable of using plugins and can define more granular things like constructors and functions this makes sense. CJS modules are only able to define objects which can be tedious to work with if you're trying to obtain constructors out of them.
 
@@ -585,9 +548,11 @@ The concern with a similar naming convention is of course confusion and the comm
 - The CommonJS Mailing List
 
 ## AMD && CommonJS ##
+## AMD 和 CommonJS
 > Competing, But Equally Valid Standards
+> 竞争，但都是有根据的标准
 
-Whilst this article has placed more emphasis on using AMD over CJS, the reality is that both formats are valid and have a use.
+虽然这篇文章的重点是使用AMD和CJS，事实上这两种格式都是凑效的、有用的。
 
 AMD adopts a browser-first approach to development, opting for asynchronous behaviour and simplified backwards compatability but it doesn't have any concept of File I/O. It supports objects, functions, constructors, strings, JSON and many other types of modules, running natively in the browser. It's incredibly flexible.
 
@@ -596,6 +561,7 @@ CommonJS on the other hand takes a server-first approach, assuming synchronous b
 Although the idea of yet another module format may be daunting, you may be interested in some samples of work on hybrid AMD/CJS and Univeral AMD/CJS modules.
 
 ### Basic AMD Hybrid Format (John Hann) ###
+### 基本的AMD混合格式 ###
 
 `define( function (require, exports, module){
     
@@ -607,6 +573,7 @@ Although the idea of yet another module format may be daunting, you may be inter
 });`
 
 ### AMD/CommonJS Universal Module Definition (Variation 2, UMDjs) ###
+### AMD/CommonJS 统一模块定义（变种2， UMDjs） ###
 
 `/**
  * exports object based version, if you need to make a
@@ -641,6 +608,7 @@ Although the idea of yet another module format may be daunting, you may be inter
 }));`
 
 ### Extensible UMD Plugins With (Variation by myself and Thomas Davis). ###
+### 可扩展的UMD插件 ###
 
 #### core.js ####
 
@@ -821,6 +789,7 @@ module cakeFactory{
 }`
 
 ### Modules Loaded From Remote Sources ###
+### 从远程源加载的模块 ###
 
 The module proposals also cater for modules which are remotely based (e.g. a third-party API wrapper) making it simplistic to load modules in from external locations. Here's an example of us pulling in the module we defined above and utilizing it:
 
