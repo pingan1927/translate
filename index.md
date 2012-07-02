@@ -1,7 +1,7 @@
 # 用AMD，CommonJS 和 ES Harmony编写模块化的JavaScript #
 
 ## 模块化 ##
-    > 解耦你的程序的重要性
+> 解耦你的程序的重要性
 
 当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
@@ -15,7 +15,7 @@
 
 ## 前奏 ##
 
-    > 关于脚本加载器的说明
+> 关于脚本加载器的说明
 
 很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
 
@@ -27,7 +27,7 @@
 
 ## AMD ##
 
-    > 一个在浏览器端编写模块化JavaScript的格式
+> 一个在浏览器端编写模块化JavaScript的格式
 
 AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
@@ -37,8 +37,8 @@ AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是
 
 今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS AMD格式等术语已在广泛的场合被了解，但最好上还是仅指AMD或者异步模块支持（）因为不是所有的CJS目录的参与者都希望如此。
 
-    > **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
-    > **说明：**
+> **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
+> **说明：**
 
 ### Getting Started With Modules ###
 ### 模块入门 ###
@@ -136,7 +136,7 @@ define(function ( require ) {
 ### Understanding AMD: plugins ###
 ### 理解AMD: 插件 ###
 
-下面是一个等译一个AMD兼容插件的实例：
+下面是定义一个AMD兼容插件的例子：
 
 ```
 // With AMD, it's possible to load in assets of almost any kind
@@ -152,9 +152,7 @@ define(['./templates', 'text!./template.md','css!./template.css'],
 });
 ```
 
-    > **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
-
-    > **Note**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的过程，**待写**
+> **注意**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的方式，这也可能导致CSS作为一个依赖被包含进在优化后的文件，所以在这种情况下谨慎使用作为依赖加载的CSS。
 
 ### Loading AMD Modules Using require.js ###
 
@@ -216,14 +214,14 @@ define(['lib/Deferred'], function( Deferred ){
 
 ### Related Reading ###
 ### 相关阅读 ###
-The RequireJS Guide To AMD
-What's the fastest way to load AMD modules?
-AMD vs. CJS, what's the better format?
-AMD Is Better For The Web Than CommonJS Modules
-The Future Is Modules Not Frameworks
-AMD No Longer A CommonJS Specification
-On Inventing JavaScript Module Formats And Script Loaders
-The AMD Mailing List
+- The RequireJS Guide To AMD
+- What's the fastest way to load AMD modules?
+- AMD vs. CJS, what's the better format?
+- AMD Is Better For The Web Than CommonJS Modules
+- The Future Is Modules Not Frameworks
+- AMD No Longer A CommonJS Specification
+- On Inventing JavaScript Module Formats And Script Loaders
+- The AMD Mailing List
 
 ### AMD Modules With Dojo ###
 ### AMD模块和Dojo ###
@@ -239,9 +237,7 @@ define(["dijit/Tooltip"], function( Tooltip ){
 
 请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的dojo.require()模块加载器等你习惯的模块加载器使用。
 
-For those wondering about module referencing, there are some interesting gotchas that are useful to know here. Although the AMD-advocated way of referencing modules declares them in the dependency list with a set of matching arguments, this isn't supported by the Dojo 1.6 build system - it really only works for AMD-compliant loaders. e.g:
-
-
+对于模块引用的疑惑，有许多有趣的陷阱，知道的话是很有用的。虽然AMD-主张的引用模块的方式在依赖列表里用一系列匹配参数声明它们，但这没有被Dojo 1.6的构建系统所支持-它仅仅在兼容AMD的加载器上才能工作。例如：
 
 ```
 define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
@@ -250,11 +246,11 @@ define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
 });
 ```
 
-This has many advances over nested namespacing as modules no longer need to directly reference complete namespaces every time - all we require is the 'dojo/cookie' path in dependencies, which once aliased to an argument, can be referenced by that variable. This removes the need to repeatedly type out 'dojo.' in your applications.
+嵌套命名空间作为一个模块有很多改进，不再需要每次直接引用完整的命名空间 - 所有我们需要的只是在依赖中的`dojo/cookie`路径，一旦给它赋予一个别名，我们就可以通过变量来引用。在您的应用程序中就不再需要反复键入`dojo.`了。
 
-    > **Note**: Although Dojo 1.6 doesn't officially support user-based AMD modules (nor asynchronous loading), it's possible to get this working with Dojo using a number of different script loaders. At present, all Dojo core and Dijit modules have been transformed to the AMD syntax and improved overall AMD support will likely land between 1.7 and 2.0.
+> **注意**：尽管Dojo 1.6官方不支持基于用户的AMD模块（或者异步加载），仍可能通过使用一些不同的脚本加载器来与Dojo一起工作。目前，所以的Dojo core以及Dijit模块都被转换成AMD语法，改进到支持整个AMD将在1.7到2.0版本实现。
 
-The final gotcha to be aware of is that if you wish to continue using the Dojo build system or wish to migrate older modules to this newer AMD-style, the following more verbose version enables easier migration. Notice that dojo and dijit and referenced as dependencies too:
+最后一个需要注意的疑难杂症是如果你希望继续使用Dojo构建系统或者希望迁移老的模块到最新的AMD风格，列出更详细的版本，可以更容易的迁移。请注意，包括Dojo、Dijit和作为依赖的引用：
 
 ```
 define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
@@ -264,12 +260,14 @@ define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
 ```
 
 ### AMD Module Design Patterns (Dojo) ###
+### AMD模块的设计模式（Dojo）
 
 If you've followed any of my previous posts on the benefits of design patterns, you'll know that they can be highly effective in improving how we approach structuring solutions to common development problems. John Hann recently gave an excellent presentation about AMD module design patterns covering the Singleton, Decorator, Mediator and others. I highly recommend checking out his slides if you get a chance.
 
 Some samples of these patterns can be found below:
 
 #### Decorator pattern: ####
+#### 装饰模式 ####
 
 ```
 // mylib/UpdatableObservable: a decorator for dojo/store/Observable
@@ -306,6 +304,7 @@ define(['mylib/UpdatableObservable'], function ( makeUpdatable ) {
 ```
 
 #### Adapter pattern ####
+#### 适配器模式 ####
 
 ```
 // 'mylib/Array' adapts `each` function to mimic jQuery's:
@@ -329,6 +328,7 @@ define(['mylib/Array'], function ( array ) {
 ```
 
 ### AMD Modules With jQuery ###
+### AMD模块和JQuery ###
 
 #### The Basics ####
 
@@ -357,6 +357,7 @@ define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
 There is however something missing from this example and it's the concept of registration.
 
 #### Registering jQuery As An Async-compatible Module ####
+#### 将JQuery注册为一个Async-compatible模块 ####
 
 One of the key features that landed in jQuery 1.7 was support for registering jQuery as an asynchronous module. There are a number of compatible script loaders (including RequireJS and curl) which are capable of loading modules using an asynchronous module format and this means fewer hacks are required to get things working.
 
@@ -392,10 +393,12 @@ define.amd = {
 ```
 
 #### Smarter jQuery Plugins ####
+#### 巧妙的JQuery插件 ####
 
 I've recently discussed some ideas and examples of how jQuery plugins could be written using Universal Module Definition (UMD) patterns here. UMDs define modules that can work on both the client and server, as well as with all popular script loaders available at the moment. Whilst this is still a new area with a lot of concepts still being finalized, feel free to look at the code samples in the section title AMD && CommonJS below and let me know if you feel there's anything we could do better.
 
 ### What Script Loaders & Frameworks Support AMD? ###
+### 那些脚本加载器和框架支持AMD？ ###
 
 #### In-browser: ####
 
@@ -414,11 +417,11 @@ I've recently discussed some ideas and examples of how jQuery plugins could be w
 ### AMD Conclusions ###
 ### AMD 结论 ###
 
-The above are very trivial examples of just how useful AMD modules can truly be, but they hopefully provide a foundation for understanding how they work.
+以上细碎的例子能够真正地说明AMD模块是多没有用，更希望向大家提供理解他们是如何工作的基础。
 
-You may be interested to know that many visible large applications and companies currently use AMD modules as a part of their architecture. These include IBM and the BBC iPlayer, which highlight just how seriously this format is being considered by developers at an enterprise-level.
+你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了IBM、BBC iPlayer，这突出了在企业级别开发者是多么严肃地对待这个格式。
 
-For more reasons why many developers are opting to use AMD modules in their applications, you may be interested in this post by James Burke.
+至于要知道许多开发者在他们的程序中选择AMD模块的原因，你应该对James Burke写的文章感兴趣。
 
 ## CommonJS ##
 ## CommonJS ##
@@ -539,6 +542,7 @@ exports.helloWorld = function(){
 ### 那些加载器和框架支持CJS？ ###
 
 #### In-browser: ####
+#### 浏览器端： ####
 
 - curl.js http://github.com/unscriptable/curl
 - SproutCore 1.1 http://sproutcore.com
@@ -546,6 +550,7 @@ exports.helloWorld = function(){
 - (and more)
 
 #### Server-side: ####
+#### 服务器端： ####
 
 - Nodehttp://nodejs.org
 - Narwhal https://github.com/tlrobinson/narwhal
