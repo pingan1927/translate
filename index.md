@@ -740,19 +740,17 @@ $(function(){
 ## ES Harmony ##
 > 未来的模块
 
-TC39, the standards body charged with defining the syntax and semantics of ECMAScript and its future iterations is composed of a number of very intelligent developers. Some of these developers (such as Alex Russell) have been keeping a close eye on the evolution of JavaScript usage for large-scale development over the past few years and are acutely aware of the need for better language features for writing more modular JS.
+TC39，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多程序员（例如Alex Russel）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
 
-TC39，ECMAScript和其未来的迭代定义的语法和语义的收费标准机构组成的一个非常聪明的开发商的数量。这其中的许多开发者（例如Alex Russel）一直持续关注着Javascript使用在过去这些年大规模开发中的变革，也敏锐地意识到为了编写更加模块化的JS的更好的语言特性的需求。
+基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将为你展示一些ES.next中针对模块的语法代码示例，你可以抢先体验到他们会是什么。
 
-For this reason, there are currently proposals for a number of exciting additions to the language including flexible modules that can work on both the client and server, a module loader and more. In this section, I'll be showing you some code samples of the syntax for modules in ES.next so you can get a taste of what's to come.
-
-基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将展示一些在ES.next模块语法的代码示例，你可以先体会到他们会是什么。
-
-> **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
+> **注意：** 尽管Harmony仍然处于提案阶段，你却已经可以尝试部分ES.next的特性。感谢Google's Traceur编译器，已经有了对编写模块化JavaScript的原生支持。为了在短时间内安装和运行Traceur，请阅读开始指南。这里也有一个JSConf的presentation值得一看，如果你对这个项目有兴趣进一步了解的话。
 
 ### 包含Imports和Exports的模块 ###
 
 If you've read through the sections on AMD and CJS modules you may be familiar with the concept of module dependencies (imports) and module exports (or, the public API/variables we allow other modules to consume). In ES.next, these concepts have been proposed in a slightly more succinct manner with dependencies being specified using an import keyword. export isn't greatly different to what we might expect and I think many developers will look at the code below and instantly 'get' it.
+
+如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念
 
 * **import** declarations bind a module's exports as local variables and may be renamed to avoid name collisions/conflicts.
 
@@ -914,12 +912,10 @@ As you can see, ES.next is coming with some exciting new additions. Although Tra
 ## 结论和进一步深入 ##
 > 回顾
 
-In this article we've reviewed several of the options available for writing modular JavaScript using modern module formats. These formats have a number of advantages over using the (classical) module pattern alone including: avoiding a need for developers to create global variables for each module they create, better support for static and dynamic dependency management, improved compatibility with script loaders, better (optional) compatibility for modules on the server and more.
+在这篇文章中我们回顾了许多使用现代模块格式用来编写模块化Javascript的可用选项。这些格式相比传统的模块模式拥有一些特性，其中包括：避免开发者为每一个他创建的模块创建一个全局变量，对静态以及动态依赖管理更好的支持，提升了脚本加载器的能力，服务器端模块更好的兼容性，等等。
 
-在这篇文章中我们回顾了许多目前可用的使用当前模块规范的编写模块化的Javascript的选择。这些规范拥有一些特性包括传统的模块模式，其中包括：避免开发者创建为一个全局变量
+简而言之，我推荐大家尝试下今天推荐的格式，因为这些格式提供了很强的功效和灵活性，从而在我们构建基于可复用的功能块的程序时能够帮助到我们。
 
-In short, I recommend trying out what's been suggested today as these formats offer a lot of power and flexibility that can help when building applications based on many reusable blocks of functionality.
+差不多到这里为止了。如果你有任何关于今天覆盖到的话题的疑问，你可以推我，我将会帮助你。
 
-And that's it for now. If you have further questions about any of the topics covered today, feel free to hit me up on twitter and I'll do my best to help!
-
-The technical review for this article was doing using Diigo (for Google Chrome). Diigo is a free tool that allows you to add both comments and highlights to any live document on the web and if there are corrections or extensions you would like to suggest, please use either Diigo (or a GitHub gist) and I'll do my test to address any points you send over.
+这篇文章的技术review使用了Diigo(for Google Chrome).Diigo是一个免费的工具，允许你在web上加入评论以及高亮到文本的任何一个地方。如果你有任何更正或者扩展需要提供，也请使用Diigo(或者GitHub gist),我会认真处理每一个你们发的point。
