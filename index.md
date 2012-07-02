@@ -1,7 +1,7 @@
 # 用AMD，CommonJS 和 ES Harmony编写模块化的JavaScript #
 
 ## 模块化 ##
-    > 解耦你的程序的重要性
+> 解耦你的程序的重要性
 
 当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
@@ -15,7 +15,7 @@
 
 ## 前奏 ##
 
-    > 关于脚本加载器的说明
+> 关于脚本加载器的说明
 
 很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
 
@@ -27,7 +27,7 @@
 
 ## AMD ##
 
-    > 一个在浏览器端编写模块化JavaScript的格式
+> 一个在浏览器端编写模块化JavaScript的格式
 
 AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
@@ -37,10 +37,8 @@ AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是
 
 今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS AMD格式等术语已在广泛的场合被了解，但最好上还是仅指AMD或者异步模块支持（）因为不是所有的CJS目录的参与者都希望如此。
 
-    > **Note:** There was a time when the proposal was referred to as Modules Transport/C, however as the spec wasn't geared for transporting existing CJS modules, but rather, for defining modules it made more sense to opt for the AMD naming convention.
-    > **说明：**
+> **说明：** 有一次提案被作为Transport/C模块提交，但是这个规范没transport已经存在的CJS模块并不合适，然而在定义模块时选择AMD的命名约定，更有意义。
 
-### Getting Started With Modules ###
 ### 模块入门 ###
 
 在这里需要关注的两个关键概念是用于促进模块定义的define方法以及用于处理依赖加载的require方法。根据提议，define使用以下签名明码来定义命名的或者未命名的模块：
@@ -97,7 +95,6 @@ define('myModule',
 
 另一方面，require通常用于加载处于顶层的JavaScript文件代码或你希望的在模块内部动态地获取依赖。一个使用的例子如下：
 
-### Understanding AMD: require() ###
 ### 理解AMD:require() ###
 
 ```
@@ -112,7 +109,6 @@ require(['foo', 'bar'], function ( foo, bar ) {
 });
 ```
 
-### Dynamically-loaded Dependencies ###
 ### 动态加载的依赖 ###
 
 ```
@@ -133,10 +129,9 @@ define(function ( require ) {
 });
 ```
 
-### Understanding AMD: plugins ###
 ### 理解AMD: 插件 ###
 
-下面是一个等译一个AMD兼容插件的实例：
+下面是定义一个AMD兼容插件的例子：
 
 ```
 // With AMD, it's possible to load in assets of almost any kind
@@ -152,11 +147,7 @@ define(['./templates', 'text!./template.md','css!./template.css'],
 });
 ```
 
-    > **Note**: Although css! is included for loading CSS dependencies in the above example, it's important to remember that this approach has some caveats such as it not being fully possible to establish when the CSS is fully loaded. Depending on how you approach your build, it may also result in CSS being included as a dependency in the optimized file, so use CSS as a loaded dependency in such cases with caution.
-
-    > **Note**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的过程，**待写**
-
-### Loading AMD Modules Using require.js ###
+> **注意**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的方式，这也可能导致CSS作为一个依赖被包含进在优化后的文件，所以在这种情况下谨慎使用作为依赖加载的CSS。
 
 ### 使用require.js加载AMD模块 ###
 
@@ -170,8 +161,6 @@ require(['app/myModule'],
 });
 ```
 
-### Loading AMD Modules Using curl.js ###
-
 ### 使用curl.js加载AMD模块 ###
 
 ```
@@ -183,8 +172,6 @@ curl(['app/myModule.js'],
         module.doStuff();
 });
 ```
-
-### Modules With Deferred Dependencies ###
 
 ### 具备Deferred依赖的模块 ###
 
@@ -203,8 +190,6 @@ define(['lib/Deferred'], function( Deferred ){
 });
 ```
 
-### Why Is AMD A Better Choice For Writing Modular JavaScript? ###
-
 ### 为什么说AMD是编写模块化的JavaScript的好选择？ ###
 
 - 为如何处理定义灵活的模块提供了一个明确的建议。
@@ -214,18 +199,16 @@ define(['lib/Deferred'], function( Deferred ){
 - 提供了 `transport`方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
 - 当需要是可以懒加载脚本。
 
-### Related Reading ###
 ### 相关阅读 ###
-The RequireJS Guide To AMD
-What's the fastest way to load AMD modules?
-AMD vs. CJS, what's the better format?
-AMD Is Better For The Web Than CommonJS Modules
-The Future Is Modules Not Frameworks
-AMD No Longer A CommonJS Specification
-On Inventing JavaScript Module Formats And Script Loaders
-The AMD Mailing List
+- The RequireJS Guide To AMD
+- What's the fastest way to load AMD modules?
+- AMD vs. CJS, what's the better format?
+- AMD Is Better For The Web Than CommonJS Modules
+- The Future Is Modules Not Frameworks
+- AMD No Longer A CommonJS Specification
+- On Inventing JavaScript Module Formats And Script Loaders
+- The AMD Mailing List
 
-### AMD Modules With Dojo ###
 ### AMD模块和Dojo ###
 
 在Dojo中定义兼容AMD的模块相当简单。As per above，定义任意模块，依赖放在一个数组中作为第一个参数并且提供一个回调（工厂），一旦依赖加载完毕这个回调将运行这个模块。例如：
@@ -239,9 +222,7 @@ define(["dijit/Tooltip"], function( Tooltip ){
 
 请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的dojo.require()模块加载器等你习惯的模块加载器使用。
 
-For those wondering about module referencing, there are some interesting gotchas that are useful to know here. Although the AMD-advocated way of referencing modules declares them in the dependency list with a set of matching arguments, this isn't supported by the Dojo 1.6 build system - it really only works for AMD-compliant loaders. e.g:
-
-
+对于模块引用的疑惑，有许多有趣的陷阱，知道的话是很有用的。虽然AMD-主张的引用模块的方式在依赖列表里用一系列匹配参数声明它们，但这没有被Dojo 1.6的构建系统所支持-它仅仅在兼容AMD的加载器上才能工作。例如：
 
 ```
 define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
@@ -250,11 +231,11 @@ define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
 });
 ```
 
-This has many advances over nested namespacing as modules no longer need to directly reference complete namespaces every time - all we require is the 'dojo/cookie' path in dependencies, which once aliased to an argument, can be referenced by that variable. This removes the need to repeatedly type out 'dojo.' in your applications.
+嵌套命名空间作为一个模块有很多改进，不再需要每次直接引用完整的命名空间 - 所有我们需要的只是在依赖中的`dojo/cookie`路径，一旦给它赋予一个别名，我们就可以通过变量来引用。在您的应用程序中就不再需要反复键入`dojo.`了。
 
-    > **Note**: Although Dojo 1.6 doesn't officially support user-based AMD modules (nor asynchronous loading), it's possible to get this working with Dojo using a number of different script loaders. At present, all Dojo core and Dijit modules have been transformed to the AMD syntax and improved overall AMD support will likely land between 1.7 and 2.0.
+> **注意**：尽管Dojo 1.6官方不支持基于用户的AMD模块（或者异步加载），仍可能通过使用一些不同的脚本加载器来与Dojo一起工作。目前，所以的Dojo core以及Dijit模块都被转换成AMD语法，改进到支持整个AMD将在1.7到2.0版本实现。
 
-The final gotcha to be aware of is that if you wish to continue using the Dojo build system or wish to migrate older modules to this newer AMD-style, the following more verbose version enables easier migration. Notice that dojo and dijit and referenced as dependencies too:
+最后一个需要注意的疑难杂症是如果你希望继续使用Dojo构建系统或者希望迁移老的模块到最新的AMD风格，列出更详细的版本，可以更容易的迁移。请注意，包括Dojo、Dijit和作为依赖的引用：
 
 ```
 define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
@@ -263,13 +244,13 @@ define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
 });
 ```
 
-### AMD Module Design Patterns (Dojo) ###
+### AMD模块的设计模式（Dojo）
 
 If you've followed any of my previous posts on the benefits of design patterns, you'll know that they can be highly effective in improving how we approach structuring solutions to common development problems. John Hann recently gave an excellent presentation about AMD module design patterns covering the Singleton, Decorator, Mediator and others. I highly recommend checking out his slides if you get a chance.
 
 Some samples of these patterns can be found below:
 
-#### Decorator pattern: ####
+#### 装饰模式 ####
 
 ```
 // mylib/UpdatableObservable: a decorator for dojo/store/Observable
@@ -305,7 +286,7 @@ define(['mylib/UpdatableObservable'], function ( makeUpdatable ) {
 });
 ```
 
-#### Adapter pattern ####
+#### 适配器模式 ####
 
 ```
 // 'mylib/Array' adapts `each` function to mimic jQuery's:
@@ -328,9 +309,9 @@ define(['mylib/Array'], function ( array ) {
 });
 ```
 
-### AMD Modules With jQuery ###
+### AMD模块和JQuery ###
 
-#### The Basics ####
+#### 基础 ####
 
 与Dojo不同，JQuery真正仅仅需要配备一个文件，虽然有了库基于插件的特性，我们仍可以演示定义一个AMD模块并使用它是何等地简单，如下所示：
 
@@ -356,7 +337,7 @@ define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
 
 There is however something missing from this example and it's the concept of registration.
 
-#### Registering jQuery As An Async-compatible Module ####
+#### 将JQuery注册为一个Async-compatible模块 ####
 
 One of the key features that landed in jQuery 1.7 was support for registering jQuery as an asynchronous module. There are a number of compatible script loaders (including RequireJS and curl) which are capable of loading modules using an asynchronous module format and this means fewer hacks are required to get things working.
 
@@ -391,13 +372,13 @@ define.amd = {
 };
 ```
 
-#### Smarter jQuery Plugins ####
+#### 巧妙的JQuery插件 ####
 
 I've recently discussed some ideas and examples of how jQuery plugins could be written using Universal Module Definition (UMD) patterns here. UMDs define modules that can work on both the client and server, as well as with all popular script loaders available at the moment. Whilst this is still a new area with a lot of concepts still being finalized, feel free to look at the code samples in the section title AMD && CommonJS below and let me know if you feel there's anything we could do better.
 
-### What Script Loaders & Frameworks Support AMD? ###
+### 那些脚本加载器和框架支持AMD？ ###
 
-#### In-browser: ####
+#### 浏览器端： ####
 
 - RequireJS http://requirejs.org
 - curl.js http://github.com/unscriptable/curl
@@ -406,38 +387,33 @@ I've recently discussed some ideas and examples of how jQuery plugins could be w
 - PINF http://github.com/pinf/loader-js
 - (and more)
 
-#### Server-side: ####
+#### 服务器端： ####
 
 - RequireJS http://requirejs.org
 - PINF http://github.com/pinf/loader-js
 
-### AMD Conclusions ###
 ### AMD 结论 ###
 
-The above are very trivial examples of just how useful AMD modules can truly be, but they hopefully provide a foundation for understanding how they work.
+以上细碎的例子能够真正地说明AMD模块是多没有用，更希望向大家提供理解他们是如何工作的基础。
 
-You may be interested to know that many visible large applications and companies currently use AMD modules as a part of their architecture. These include IBM and the BBC iPlayer, which highlight just how seriously this format is being considered by developers at an enterprise-level.
+你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了IBM、BBC iPlayer，这突出了在企业级别开发者是多么严肃地对待这个格式。
 
-For more reasons why many developers are opting to use AMD modules in their applications, you may be interested in this post by James Burke.
+至于要知道许多开发者在他们的程序中选择AMD模块的原因，你应该对James Burke写的文章感兴趣。
 
 ## CommonJS ##
-## CommonJS ##
 
-    > A Module Format Optimized For The Server
-    > 针对服务器端优化的模块格式
+> 针对服务器端优化的模块格式
 
 CommonJS are a volunteer working group which aim to design, prototype and standardize JavaScript APIs. To date they've attempted to ratify standards for both modules and packages. The CommonJS module proposal specifies a simple API for declaring modules server-side and unlike AMD attempts to cover a broader set of concerns such as io, filesystem, promises and more.
 
 CommonJS是一个志愿者工作组，目标是设计，原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了模块以及包标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖了更广泛的关注点，例如io，文件系统，promise等。
 
-### Getting Started ###
 ### 入门 ###
 
 从结构的视图来看，CJS模块是可重复使用的JavaScript片段，其中exports提供具体的对象，使之对任何独立的代码都是可用的 - 通常这样的模块没有函数包装（所以你不会看到例如define的使用）。
 
 从更高层次来说，它们基本上仅包含两个主要部分：一个包含模块对象的自由变量命名为exports，提供给其他模块；一个require函数，模块可以通过require导入其它模块。
 
-### Understanding CJS: require() and exports ###
 ### 理解CJS: require()以及exports ###
 
 ```
@@ -453,7 +429,6 @@ function foo(){
 exports.foo = foo;
 ```
 
-### Basic consumption of exports ###
 ### exports的基本使用 ###
 
 ```
@@ -484,8 +459,7 @@ var foobar = require('./foobar').foobar,
 test.bar(); // 'Hello bar'
 ```
 
-### AMD-equivalent Of The First CJS Example ###
-### 与AMD等价的第一个CJS例子 ###
+### 与AMD等同的第一个CJS例子 ###
 
 ```
 define(['package/lib'], function(lib){
@@ -502,7 +476,6 @@ define(['package/lib'], function(lib){
 });
 ```
 
-### Consuming Multiple Dependencies ###
 ### 使用多个依赖 ###
 
 #### app.js ####
@@ -535,24 +508,20 @@ exports.helloWorld = function(){
 }
 ```
 
-### What Loaders & Frameworks Support CJS? ###
-### 那些加载器和框架支持CJS？ ###
-
-#### In-browser: ####
+#### 浏览器端： ####
 
 - curl.js http://github.com/unscriptable/curl
 - SproutCore 1.1 http://sproutcore.com
 - PINF http://github.com/pinf/loader-js
 - (and more)
 
-#### Server-side: ####
+#### 服务器端： ####
 
 - Nodehttp://nodejs.org
 - Narwhal https://github.com/tlrobinson/narwhal
 - Perseverehttp://www.persvr.org/
 - Wakandahttp://www.wakandasoft.com/
 
-### Is CJS Suitable For The Browser? ###
 ### CJS适合浏览器吗？ ###
 
 There are developers that feel CommonJS is better suited to server-side development which is one reason there's currently a level of **disagreement** over which format should and will be used as the de facto standard in the pre-Harmony age moving forward. Some of the arguments against CJS include a note that many CommonJS APIs address server-oriented features which one would simply not be able to implement at a browser-level in JavaScript - for example, io, system and js could be considered unimplementable by the nature of their functionality.
@@ -569,7 +538,7 @@ Although it's beyond the scope of this article, you may have also noticed that t
 
 The concern with a similar naming convention is of course confusion and the community are currently split on the merits of a global require function. John Hann's suggestion here is that rather than calling it 'require', which would probably fail to achieve the goal of informing users about the different between a global and inner require, it may make more sense to rename the global loader method something else (e.g. the name of the library). It's for this reason that a loader like curl.js uses curl() as opposed to require.
 
-#### Related Reading ###
+#### 相关阅读 ###
 
 - Demystifying CommonJS Modules
 - JavaScript Growing Up
@@ -578,10 +547,8 @@ The concern with a similar naming convention is of course confusion and the comm
 - Asynchronous CommonJS Modules for the Browser
 - The CommonJS Mailing List
 
-## AMD && CommonJS ##
-## AMD 和 CommonJS
-    > Competing, But Equally Valid Standards
-    > 竞争，但都是有根据的标准
+## AMD 和 CommonJS ##
+> 竞争，但同样是效的标准
 
 虽然这篇文章的重点是使用AMD和CJS，事实上这两种格式都是凑效的、有用的。
 
@@ -591,8 +558,7 @@ CommonJS on the other hand takes a server-first approach, assuming synchronous b
 
 Although the idea of yet another module format may be daunting, you may be interested in some samples of work on hybrid AMD/CJS and Univeral AMD/CJS modules.
 
-### Basic AMD Hybrid Format (John Hann) ###
-### 基本的AMD混合格式 ###
+### 基本的AMD混合格式 (John Hann)  ###
 
 ```
 define( function (require, exports, module){
@@ -605,7 +571,6 @@ define( function (require, exports, module){
 });
 ```
 
-### AMD/CommonJS Universal Module Definition (Variation 2, UMDjs) ###
 ### AMD/CommonJS 统一模块定义（变种2， UMDjs） ###
 
 ```
@@ -642,7 +607,6 @@ define( function (require, exports, module){
 }));
 ```
 
-### Extensible UMD Plugins With (Variation by myself and Thomas Davis). ###
 ### 可扩展的UMD插件 ###
 
 #### core.js ####
@@ -774,22 +738,19 @@ $(function(){
 ```
 
 ## ES Harmony ##
-    > Modules Of The Future
-    > 未来的模块
+> 未来的模块
 
-TC39, the standards body charged with defining the syntax and semantics of ECMAScript and its future iterations is composed of a number of very intelligent developers. Some of these developers (such as Alex Russell) have been keeping a close eye on the evolution of JavaScript usage for large-scale development over the past few years and are acutely aware of the need for better language features for writing more modular JS.
+TC39，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多程序员（例如Alex Russel）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
 
-TC39，ECMAScript和其未来的迭代定义的语法和语义的收费标准机构组成的一个非常聪明的开发商的数量。这其中的许多开发者（例如Alex Russel）一直持续关注着Javascript使用在过去这些年大规模开发中的变革，也敏锐地意识到为了编写更加模块化的JS的更好的语言特性的需求。
+基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将为你展示一些ES.next中针对模块的语法代码示例，你可以抢先体验到他们会是什么。
 
-For this reason, there are currently proposals for a number of exciting additions to the language including flexible modules that can work on both the client and server, a module loader and more. In this section, I'll be showing you some code samples of the syntax for modules in ES.next so you can get a taste of what's to come.
+> **注意：** 尽管Harmony仍然处于提案阶段，你却已经可以尝试部分ES.next的特性。感谢Google's Traceur编译器，已经有了对编写模块化JavaScript的原生支持。为了在短时间内安装和运行Traceur，请阅读开始指南。这里也有一个JSConf的presentation值得一看，如果你对这个项目有兴趣进一步了解的话。
 
-基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将展示一些在ES.next模块语法的代码示例，你可以先体会到他们会是什么。
-
-    > **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
-
-### Modules With Imports And Exports ###
+### 包含Imports和Exports的模块 ###
 
 If you've read through the sections on AMD and CJS modules you may be familiar with the concept of module dependencies (imports) and module exports (or, the public API/variables we allow other modules to consume). In ES.next, these concepts have been proposed in a slightly more succinct manner with dependencies being specified using an import keyword. export isn't greatly different to what we might expect and I think many developers will look at the code below and instantly 'get' it.
+
+如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念
 
 * **import** declarations bind a module's exports as local variables and may be renamed to avoid name collisions/conflicts.
 
@@ -830,10 +791,11 @@ module cakeFactory{
 }
 ```
 
-### Modules Loaded From Remote Sources ###
 ### 从远程源加载的模块 ###
 
 The module proposals also cater for modules which are remotely based (e.g. a third-party API wrapper) making it simplistic to load modules in from external locations. Here's an example of us pulling in the module we defined above and utilizing it:
+
+模块提案也迎合了基于远程的一类模块，简化了从外部地址加载模块。
 
 ```
 module cakeFactory from 'http://addyosmani.com/factory/cakes.js';
@@ -841,7 +803,7 @@ cakeFactory.oven.makeCupcake('sprinkles');
 cakeFactory.oven.makeMuffin('large');
 ```
 
-### Module Loader API ###
+### 模块加载器API ###
 
 The module loader proposed describes a dynamic API for loading modules in highly controlled contexts. Signatures supported on the loader include load( url, moduleInstance, error) for loading modules, createModule( object, globalModuleReferences) and others. Here's another example of us dynamically loading in the module we initially defined. Note that unlike the last example where we pulled in a module from a remote source, the module loader API is better suited to dynamic contexts.
 
@@ -852,7 +814,7 @@ Loader.load('http://addyosmani.com/factory/cakes.js',
     });
 ```
 
-### CommonJS-like Modules For The Server ###
+### 针对服务器端的类CommonJS模块 ###
 
 For developers who are server-oriented, the module system proposed for ES.next isn't just constrained to looking at modules in the browser. Below for examples, you can see a CJS-like module proposed for use on the server:
 
@@ -882,7 +844,7 @@ module stdlib from '@std';
 //... scan(cmdline[0]) ...
 ```
 
-### Classes With Constructors, Getters & Setters ###
+### 含有构造器、Getters、Setters的Classes ###
 
 The notion of a class has always been a contentious issue with purists and we've so far got along with either falling back on JavaScript's prototypal nature or through using frameworks or abstractions that offer the ability to use class definitions in a form that desugars to the same prototypal behavior.
 
@@ -935,11 +897,11 @@ class Cake{
 }
 ```
 
-### ES Harmony Conclusions ###
+### ES Harmony 结论 ###
 
 As you can see, ES.next is coming with some exciting new additions. Although Traceur can be used to an extent to try our such features in the present, remember that it may not be the best idea to plan out your system to use Harmony (just yet). There are risks here such as specifications changing and a potential failure at the cross-browser level (IE9 for example will take a while to die) so your best bets until we have both spec finalization and coverage are AMD (for in-browser modules) and CJS (for those on the server).
 
-#### Related Reading ####
+#### 相关阅读 ####
 
 - A First Look At The Upcoming JavaScript Modules
 - David Herman On JavaScript/ES.Next (Video)
@@ -947,15 +909,13 @@ As you can see, ES.next is coming with some exciting new additions. Although Tra
 - ES Harmony Module Semantics/Structure Rationale
 - ES Harmony Class Proposals
 
-##Conclusions And Further Reading ##
-    > A Review
+## 结论和进一步深入 ##
+> 回顾
 
-In this article we've reviewed several of the options available for writing modular JavaScript using modern module formats. These formats have a number of advantages over using the (classical) module pattern alone including: avoiding a need for developers to create global variables for each module they create, better support for static and dynamic dependency management, improved compatibility with script loaders, better (optional) compatibility for modules on the server and more.
+在这篇文章中我们回顾了许多使用现代模块格式用来编写模块化Javascript的可用选项。这些格式相比传统的模块模式拥有一些特性，其中包括：避免开发者为每一个他创建的模块创建一个全局变量，对静态以及动态依赖管理更好的支持，提升了脚本加载器的能力，服务器端模块更好的兼容性，等等。
 
-在这篇文章中我们回顾了许多目前可用的使用当前模块规范的编写模块化的Javascript的选择。这些规范拥有一些特性包括传统的模块模式，其中包括：避免开发者创建为一个全局变量
+简而言之，我推荐大家尝试下今天推荐的格式，因为这些格式提供了很强的功效和灵活性，从而在我们构建基于可复用的功能块的程序时能够帮助到我们。
 
-In short, I recommend trying out what's been suggested today as these formats offer a lot of power and flexibility that can help when building applications based on many reusable blocks of functionality.
+差不多到这里为止了。如果你有任何关于今天覆盖到的话题的疑问，你可以推我，我将会帮助你。
 
-And that's it for now. If you have further questions about any of the topics covered today, feel free to hit me up on twitter and I'll do my best to help!
-
-The technical review for this article was doing using Diigo (for Google Chrome). Diigo is a free tool that allows you to add both comments and highlights to any live document on the web and if there are corrections or extensions you would like to suggest, please use either Diigo (or a GitHub gist) and I'll do my test to address any points you send over.
+这篇文章的技术review使用了Diigo(for Google Chrome).Diigo是一个免费的工具，允许你在web上加入评论以及高亮到文本的任何一个地方。如果你有任何更正或者扩展需要提供，也请使用Diigo(或者GitHub gist),我会认真处理每一个你们发的point。
