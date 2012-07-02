@@ -426,8 +426,8 @@ I've recently discussed some ideas and examples of how jQuery plugins could be w
 ## CommonJS ##
 ## CommonJS ##
 
-    > A Module Format Optimized For The Server
-    > 针对服务器端优化的模块格式
+> A Module Format Optimized For The Server
+> 针对服务器端优化的模块格式
 
 CommonJS are a volunteer working group which aim to design, prototype and standardize JavaScript APIs. To date they've attempted to ratify standards for both modules and packages. The CommonJS module proposal specifies a simple API for declaring modules server-side and unlike AMD attempts to cover a broader set of concerns such as io, filesystem, promises and more.
 
@@ -488,7 +488,7 @@ test.bar(); // 'Hello bar'
 ```
 
 ### AMD-equivalent Of The First CJS Example ###
-### 与AMD等价的第一个CJS例子 ###
+### 与AMD等同的第一个CJS例子 ###
 
 ```
 define(['package/lib'], function(lib){
@@ -538,10 +538,8 @@ exports.helloWorld = function(){
 }
 ```
 
-### What Loaders & Frameworks Support CJS? ###
 ### 那些加载器和框架支持CJS？ ###
 
-#### In-browser: ####
 #### 浏览器端： ####
 
 - curl.js http://github.com/unscriptable/curl
@@ -549,7 +547,6 @@ exports.helloWorld = function(){
 - PINF http://github.com/pinf/loader-js
 - (and more)
 
-#### Server-side: ####
 #### 服务器端： ####
 
 - Nodehttp://nodejs.org
@@ -557,7 +554,6 @@ exports.helloWorld = function(){
 - Perseverehttp://www.persvr.org/
 - Wakandahttp://www.wakandasoft.com/
 
-### Is CJS Suitable For The Browser? ###
 ### CJS适合浏览器吗？ ###
 
 There are developers that feel CommonJS is better suited to server-side development which is one reason there's currently a level of **disagreement** over which format should and will be used as the de facto standard in the pre-Harmony age moving forward. Some of the arguments against CJS include a note that many CommonJS APIs address server-oriented features which one would simply not be able to implement at a browser-level in JavaScript - for example, io, system and js could be considered unimplementable by the nature of their functionality.
@@ -610,7 +606,6 @@ define( function (require, exports, module){
 });
 ```
 
-### AMD/CommonJS Universal Module Definition (Variation 2, UMDjs) ###
 ### AMD/CommonJS 统一模块定义（变种2， UMDjs） ###
 
 ```
@@ -779,8 +774,7 @@ $(function(){
 ```
 
 ## ES Harmony ##
-    > Modules Of The Future
-    > 未来的模块
+> 未来的模块
 
 TC39, the standards body charged with defining the syntax and semantics of ECMAScript and its future iterations is composed of a number of very intelligent developers. Some of these developers (such as Alex Russell) have been keeping a close eye on the evolution of JavaScript usage for large-scale development over the past few years and are acutely aware of the need for better language features for writing more modular JS.
 
@@ -790,9 +784,9 @@ For this reason, there are currently proposals for a number of exciting addition
 
 基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将展示一些在ES.next模块语法的代码示例，你可以先体会到他们会是什么。
 
-    > **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
+> **Note:** Although Harmony is still in the proposal phases, you can already try out (partial) features of ES.next that address native support for writing modular JavaScript thanks to Google's Traceur compiler. To get up and running with Traceur in under a minute, read this getting started guide. There's also a JSConf presentation about it that's worth looking at if you're interested in learning more about the project.
 
-### Modules With Imports And Exports ###
+### 包含Imports和Exports的模块 ###
 
 If you've read through the sections on AMD and CJS modules you may be familiar with the concept of module dependencies (imports) and module exports (or, the public API/variables we allow other modules to consume). In ES.next, these concepts have been proposed in a slightly more succinct manner with dependencies being specified using an import keyword. export isn't greatly different to what we might expect and I think many developers will look at the code below and instantly 'get' it.
 
@@ -835,10 +829,11 @@ module cakeFactory{
 }
 ```
 
-### Modules Loaded From Remote Sources ###
 ### 从远程源加载的模块 ###
 
 The module proposals also cater for modules which are remotely based (e.g. a third-party API wrapper) making it simplistic to load modules in from external locations. Here's an example of us pulling in the module we defined above and utilizing it:
+
+模块提案也迎合了基于远程的一类模块，简化了从外部地址加载模块。
 
 ```
 module cakeFactory from 'http://addyosmani.com/factory/cakes.js';
