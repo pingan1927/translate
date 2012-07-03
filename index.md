@@ -748,13 +748,12 @@ TC39，标准本身受ECMAScript的语法和语义定义控制，其下一个迭
 
 ### 包含Imports和Exports的模块 ###
 
-If you've read through the sections on AMD and CJS modules you may be familiar with the concept of module dependencies (imports) and module exports (or, the public API/variables we allow other modules to consume). In ES.next, these concepts have been proposed in a slightly more succinct manner with dependencies being specified using an import keyword. export isn't greatly different to what we might expect and I think many developers will look at the code below and instantly 'get' it.
+如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念被建议成一种略微简洁的方式，其中依赖被制定使用import关键字。export和你期望的区别也不是很大，我想大多程序员看了下面的代码之后会立刻“把握”到它的。
 
-如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念
-
-* **import** declarations bind a module's exports as local variables and may be renamed to avoid name collisions/conflicts.
+* **import** 声明作为一个局部变量绑定模块的exports，可以重命名以避免命名碰撞/冲突。
 
 * **export** declarations declare that a local-binding of a module is externally visible such that other modules may read the exports but can't modify them. Interestingly, modules may export child modules however can't export modules that have been defined elsewhere. You may also rename exports so their external name differs from their local names.
+* **export**
 
 ```
 module staff{
