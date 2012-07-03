@@ -246,9 +246,9 @@ define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
 
 ### AMD模块的设计模式（Dojo）
 
-If you've followed any of my previous posts on the benefits of design patterns, you'll know that they can be highly effective in improving how we approach structuring solutions to common development problems. John Hann recently gave an excellent presentation about AMD module design patterns covering the Singleton, Decorator, Mediator and others. I highly recommend checking out his slides if you get a chance.
+如果你关注了我之前几篇文章关于设计模式的好处，将知道这些设计模式在提高我们找到一般开发难题的结构性解决方案是多么的高效率。John Hann最近给出了一个非常出色的关于AMD设计模式的presentation，包含了Singleton, Decorator, Mediator以及其它。如果有机会强烈建议大家去阅读下他的slides。
 
-Some samples of these patterns can be found below:
+这些模式的许多例子可以从下面找到：
 
 #### 装饰模式 ####
 
@@ -335,19 +335,22 @@ define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
     });
 ```
 
-There is however something missing from this example and it's the concept of registration.
+然而这个例子仍然缺少了注册的概念。
 
 #### 将JQuery注册为一个Async-compatible模块 ####
 
-One of the key features that landed in jQuery 1.7 was support for registering jQuery as an asynchronous module. There are a number of compatible script loaders (including RequireJS and curl) which are capable of loading modules using an asynchronous module format and this means fewer hacks are required to get things working.
+JQuery 1.7所支持的核心特性之一就是将JQuery注册成为一个asynchronous模块。有许多兼容的脚本加载器（包括RequireJS以及curl）有能力通过AMD格式加载模块，通过这种方式只需要很少的hacks就可以正常工作。
 
-As a result of jQuery's popularity, AMD loaders need to take into account multiple versions of the library being loaded into the same page as you ideally don't want several different versions loading at the same time. Loaders have the option of either specifically taking this issue into account or instructing their users that there are known issues with third party scripts and their libraries.
+由于JQuery的声望，AMD加载器需要需要顾及库的多个版本在同一个页面中同时被加载即使你真的不想在同一个时刻加载多个不同的版本。加载器专门考虑了这个问题，或指导他们的用户关于第三方脚本和他们的库之间的问题。
 
 What the 1.7 addition brings to the table is that it helps avoid issues with other third party code on a page accidentally loading up a version of jQuery on the page that the owner wasn't expecting. You don't want other instances clobbering your own and so this can be of benefit.
+
+**1.7版本带给我们的新东西就是帮助我们避免了关在所有者不希望的页面意外地其他第三方代码。。。 你不希望其他实例妨碍到你自己的代码，这个版本的JQuery有利于这样的目标。**
 
 The way this works is that the script loader being employed indicates that it supports multiple jQuery versions by specifying that a property, define.amd.jQuery is equal to true. For those interested in more specific implementation details, we register jQuery as a named module as there is a risk that it can be concatenated with other files which may use AMD's define() method, but not use a proper concatenation script that understands anonymous AMD module definitions.
 
 The named AMD provides a safety blanket of being both robust and safe for most use-cases.
+命名的AMD提供了一个稳健和安全的，对于大多数用例的safety blanket。
 
 ```
 // Account for the existence of more than one global
@@ -374,7 +377,7 @@ define.amd = {
 
 #### 巧妙的JQuery插件 ####
 
-I've recently discussed some ideas and examples of how jQuery plugins could be written using Universal Module Definition (UMD) patterns here. UMDs define modules that can work on both the client and server, as well as with all popular script loaders available at the moment. Whilst this is still a new area with a lot of concepts still being finalized, feel free to look at the code samples in the section title AMD && CommonJS below and let me know if you feel there's anything we could do better.
+最近讨论了关于如何使用UMD模式来编写jQuery插件的一些想法和例子。UMD定义模块使之能够在客户端和服务器端工作，就像目前所有可见的流行脚本加载器一样。虽然这是一个新的领域，很多概念都在处在定稿之中，在下面标题为AMD&&CommonJS的段落可以随意看看代码实例，并让我知道有哪些我们可以做的更好的地方。
 
 ### 那些脚本加载器和框架支持AMD？ ###
 
@@ -404,9 +407,7 @@ I've recently discussed some ideas and examples of how jQuery plugins could be w
 
 > 针对服务器端优化的模块格式
 
-CommonJS are a volunteer working group which aim to design, prototype and standardize JavaScript APIs. To date they've attempted to ratify standards for both modules and packages. The CommonJS module proposal specifies a simple API for declaring modules server-side and unlike AMD attempts to cover a broader set of concerns such as io, filesystem, promises and more.
-
-CommonJS是一个志愿者工作组，目标是设计，原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了模块以及包标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖了更广泛的关注点，例如io，文件系统，promise等。
+CommonJS是一个志愿者工作组，目标是设计、原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了模块以及包标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖更广泛的关注点，例如io，文件系统，promise等。
 
 ### 入门 ###
 
@@ -552,11 +553,11 @@ The concern with a similar naming convention is of course confusion and the comm
 
 虽然这篇文章的重点是使用AMD和CJS，事实上这两种格式都是凑效的、有用的。
 
-AMD adopts a browser-first approach to development, opting for asynchronous behaviour and simplified backwards compatability but it doesn't have any concept of File I/O. It supports objects, functions, constructors, strings, JSON and many other types of modules, running natively in the browser. It's incredibly flexible.
+AMD采用了浏览器优先的开发路径，选择了异步行为以及简化向后兼容，但它没有任何关于I/O的概念。它支持对象，函数，构造函数，字符串，JSON以及很多其他类型的模块，原生地运行于浏览器。它令人难以置信地灵活。
 
-CommonJS on the other hand takes a server-first approach, assuming synchronous behaviour, no global baggage as John Hann would refer to it as and it attempts to cater for the future (on the server). What we mean by this is that because CJS supports unwrapped modules, it can feel a little more close to the ES.next/Harmony specifications, freeing you of the define() wrapper that AMD enforces. CJS modules however only support objects as modules.
+CommonJS选择了另外一条服务器端优先的方式，使用同步行为，就像John Hann把它作为的一样没有全局的负担,它试图适应未来的趋势（在服务器端）。其实想表达的意思就是因为CJS支持未封装的模块，感觉上它更接近ES.next/Harmony规范，释放你AMD强制使用define封装。然而CJS仅仅支持对象作为模块。
 
-Although the idea of yet another module format may be daunting, you may be interested in some samples of work on hybrid AMD/CJS and Univeral AMD/CJS modules.
+尽管其他的模块格式的思路可能会令人生畏，你应该会对使用hybrid AMD、CJS以及Univeral AMD/CJS模块的实例感兴趣。
 
 ### 基本的AMD混合格式 (John Hann)  ###
 
