@@ -349,8 +349,9 @@ What the 1.7 addition brings to the table is that it helps avoid issues with oth
 
 The way this works is that the script loader being employed indicates that it supports multiple jQuery versions by specifying that a property, define.amd.jQuery is equal to true. For those interested in more specific implementation details, we register jQuery as a named module as there is a risk that it can be concatenated with other files which may use AMD's define() method, but not use a proper concatenation script that understands anonymous AMD module definitions.
 
-The named AMD provides a safety blanket of being both robust and safe for most use-cases.
-命名的AMD提供了一个稳健和安全的，对于大多数用例的safety blanket。
+它的工作方式是使用脚本加载器表明它通过设定一个属性来支持多个JQuery版本，define.amd.jQuery等于true。对于更详细的实现细节则更加有趣，我们将JQuery注册为一个命名的模块，虽然这有一定的风险，因为它可以跟其他可能使用AMD的define方法的文件串联在一起，而不是使用一个合适理解AMD模块定义的的串联脚本。
+
+命名的AMD提供了一个针对大多数用例稳健和安全的的safety blanket。
 
 ```
 // Account for the existence of more than one global
@@ -533,11 +534,11 @@ That said, it's useful to know how to structure CJS modules regardless so that w
 
 有种说法，了解CJS模块的结构是非常有用的，当定义可以更好地鉴别他们
 
-As AMD modules are capable of using plugins and can define more granular things like constructors and functions this makes sense. CJS modules are only able to define objects which can be tedious to work with if you're trying to obtain constructors out of them.
+因为AMD模块能够使用插件从而使定义更加细粒度的东西，例如构造函数和函数变得有意义。而CJS模块只能定义对象，如果你尝试从它们那获得构造函数可能会觉得非常乏味。
 
-Although it's beyond the scope of this article, you may have also noticed that there were different types of 'require' methods mentioned when discussing AMD and CJS.
+虽然这超出了本文的范畴，你可能已经意识到当讨论AMD和CJS时提到的`require`方法是有不同的类型的。
 
-The concern with a similar naming convention is of course confusion and the community are currently split on the merits of a global require function. John Hann's suggestion here is that rather than calling it 'require', which would probably fail to achieve the goal of informing users about the different between a global and inner require, it may make more sense to rename the global loader method something else (e.g. the name of the library). It's for this reason that a loader like curl.js uses curl() as opposed to require.
+对类似的命名约定的关注注定是个混乱，当前工作组对全局的require功能的优点产生了分歧。John Hann在这里的建议是不应该称呼它为“require”，这可能导致实现告知用户全局以及内部require的区别的目标失败，将全局加载器的方法命名为其它（例如：库的名字）会更有意义。因为这个原因，想curl.js使用curl()来代替require。
 
 #### 相关阅读 ###
 
@@ -900,6 +901,8 @@ class Cake{
 ### ES Harmony 结论 ###
 
 As you can see, ES.next is coming with some exciting new additions. Although Traceur can be used to an extent to try our such features in the present, remember that it may not be the best idea to plan out your system to use Harmony (just yet). There are risks here such as specifications changing and a potential failure at the cross-browser level (IE9 for example will take a while to die) so your best bets until we have both spec finalization and coverage are AMD (for in-browser modules) and CJS (for those on the server).
+
+正如你所看到的，ES.next即将带着许多令人兴奋的新特新到来。尽管目前Traceur能够在某种程度上体验新特性，但记住它可能不是为使用Harmony而规划你的系统的最好的主意，
 
 #### 相关阅读 ####
 
