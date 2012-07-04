@@ -754,8 +754,7 @@ TC39，标准本身受ECMAScript的语法和语义定义控制，其下一个迭
 
 * **import** 声明作为一个局部变量绑定模块的exports，可以重命名以避免命名碰撞/冲突。
 
-* **export** declarations declare that a local-binding of a module is externally visible such that other modules may read the exports but can't modify them. Interestingly, modules may export child modules however can't export modules that have been defined elsewhere. You may also rename exports so their external name differs from their local names.
-* **export**
+* **export** 声明声明了一个模块的本地绑定是对外部可见的因此其它的模块可以读取这个export但是不能修改它们。有趣的是，模块可以export子模块，虽然不能export已经在其它地方定义过的模块。你也可以重命名export从而它们的外部名字会与它们的本地名字不同。
 
 ```
 module staff{
@@ -794,9 +793,7 @@ module cakeFactory{
 
 ### 从远程源加载的模块 ###
 
-The module proposals also cater for modules which are remotely based (e.g. a third-party API wrapper) making it simplistic to load modules in from external locations. Here's an example of us pulling in the module we defined above and utilizing it:
-
-模块提案也迎合了基于远程的一类模块，简化了从外部地址加载模块。
+模块提案也迎合了基于远程的一类模块，简化了从外部地址加载模块。这是一个获取我们之前定义的模块并利用的例子。
 
 ```
 module cakeFactory from 'http://addyosmani.com/factory/cakes.js';
@@ -806,7 +803,7 @@ cakeFactory.oven.makeMuffin('large');
 
 ### 模块加载器API ###
 
-The module loader proposed describes a dynamic API for loading modules in highly controlled contexts. Signatures supported on the loader include load( url, moduleInstance, error) for loading modules, createModule( object, globalModuleReferences) and others. Here's another example of us dynamically loading in the module we initially defined. Note that unlike the last example where we pulled in a module from a remote source, the module loader API is better suited to dynamic contexts.
+模块加载器建议在一个高度可控的上下文中为加载模块描述描述一个动态的API。加载器上的签名Signatures支持包括load（url，模块实例，错误）来加载模块、createModule（对象，全局模块引用）以及其它。这是在我们最初定义的模块中实现的动地态加载的另外一个例子。注意与最后一个例子不一样，我们从一个远程源获取模块，模块加载器能够更好地适应动态上下文。
 
 ```
 Loader.load('http://addyosmani.com/factory/cakes.js',
@@ -817,7 +814,7 @@ Loader.load('http://addyosmani.com/factory/cakes.js',
 
 ### 针对服务器端的类CommonJS模块 ###
 
-For developers who are server-oriented, the module system proposed for ES.next isn't just constrained to looking at modules in the browser. Below for examples, you can see a CJS-like module proposed for use on the server:
+针对面向服务器的程序员，ES.next建议的模块系统并不局限于在浏览器端查找模块。例如下面，你能够看到一个建议在服务器端使用的类CJS的模块。
 
 ```
 // io/File.js
@@ -847,9 +844,9 @@ module stdlib from '@std';
 
 ### 含有构造器、Getters、Setters的Classes ###
 
-The notion of a class has always been a contentious issue with purists and we've so far got along with either falling back on JavaScript's prototypal nature or through using frameworks or abstractions that offer the ability to use class definitions in a form that desugars to the same prototypal behavior.
+类的概念一直都是伴随着较真、有争议的问题。目前为止我们在处理这个问题时既没有回到JavaScript的原型特性也没有通过使用提供class定义能力的能够表现出与原型一样行为的框架或者抽象。
 
-In Harmony, classes come as part of the language along with constructors and (finally) some sense of true privacy. In the following examples, I've included some inline comments to help you understand how classes are structured, but you may also notice the lack of the word 'function' in here. This isn't a typo error: TC39 have been making a conscious effort to decrease our abuse of the function keyword for everything and the hope is that this will help simplify how we write code.
+在Harmony，类与constructors和真正的私有化一起作为语言的部分。在下面的例子中，包含了一些行内注释用来帮助理解class是如何被结构化的，但是你也可能会注意到这里缺少了`function`这个单词。这并不是一个typo错误：TC39已经意识并努力减少function关键字的滥用并希望这样能够简化我们的代码。
 
 ```
 class Cake{
@@ -894,15 +891,12 @@ class Cake{
         public(this).cakeSize = cSize;
     }
 
-
 }
 ```
 
 ### ES Harmony 结论 ###
 
-As you can see, ES.next is coming with some exciting new additions. Although Traceur can be used to an extent to try our such features in the present, remember that it may not be the best idea to plan out your system to use Harmony (just yet). There are risks here such as specifications changing and a potential failure at the cross-browser level (IE9 for example will take a while to die) so your best bets until we have both spec finalization and coverage are AMD (for in-browser modules) and CJS (for those on the server).
-
-正如你所看到的，ES.next即将带着许多令人兴奋的新特新到来。尽管目前Traceur能够在某种程度上体验新特性，但记住它可能不是为使用Harmony而规划你的系统的最好的主意，
+正如你所看到的，ES.next即将带着许多令人兴奋的新特新到来。尽管目前Traceur能够在某种程度上体验新特性，但记住它可能不是为使用Harmony而规划你的系统的最好的主意。存在许多风险例如规范的修改以及在跨浏览器级别潜在的失败（例如IE9需要一段时间才会消亡），因此你最好等到我们规范定稿以及覆盖到AMD（浏览器端）和CJS（服务器端）。
 
 #### 相关阅读 ####
 
