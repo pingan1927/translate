@@ -343,13 +343,9 @@ JQuery 1.7所支持的核心特性之一就是将JQuery注册成为一个asynchr
 
 由于JQuery的声望，AMD加载器需要需要顾及库的多个版本在同一个页面中同时被加载即使你真的不想在同一个时刻加载多个不同的版本。加载器专门考虑了这个问题，或指导他们的用户关于第三方脚本和他们的库之间的问题。
 
-What the 1.7 addition brings to the table is that it helps avoid issues with other third party code on a page accidentally loading up a version of jQuery on the page that the owner wasn't expecting. You don't want other instances clobbering your own and so this can be of benefit.
+1.7版本带给我们的新东西就是帮助我们避免第三方代码一些问题，如在一个页面里意外加载了某个版本的jQuery，而这是页面所有者不希望的。你不希望其它实例妨碍到自己本身，这种方式有利于这样的目标的实现。
 
-**1.7版本带给我们的新东西就是帮助我们避免了关在所有者不希望的页面意外地其他第三方代码。。。 你不希望其他实例妨碍到你自己的代码，这个版本的JQuery有利于这样的目标。**
-
-The way this works is that the script loader being employed indicates that it supports multiple jQuery versions by specifying that a property, define.amd.jQuery is equal to true. For those interested in more specific implementation details, we register jQuery as a named module as there is a risk that it can be concatenated with other files which may use AMD's define() method, but not use a proper concatenation script that understands anonymous AMD module definitions.
-
-它的工作方式是使用脚本加载器表明它通过设定一个属性来支持多个JQuery版本，define.amd.jQuery等于true。对于更详细的实现细节则更加有趣，我们将JQuery注册为一个命名的模块，虽然这有一定的风险，因为它可以跟其他可能使用AMD的define方法的文件串联在一起，而不是使用一个合适理解AMD模块定义的的串联脚本。
+这种工作方式即脚本加载器被使用表明可以通过设定一个属性来支持jQuery多版本，define.amd.jQuery等价于true。更加详细的实现细节则更加有趣，我们将JQuery注册为一个命名模块，虽然这有一定的风险，因为它可能跟其他可使用AMD的define方法的文件串联在一起，而非使用一个理解AMD模块定义的合适的的串联脚本。
 
 命名的AMD提供了一个针对大多数用例稳健和安全的的safety blanket。
 
@@ -526,13 +522,9 @@ exports.helloWorld = function(){
 
 ### CJS适合浏览器吗？ ###
 
-There are developers that feel CommonJS is better suited to server-side development which is one reason there's currently a level of **disagreement** over which format should and will be used as the de facto standard in the pre-Harmony age moving forward. Some of the arguments against CJS include a note that many CommonJS APIs address server-oriented features which one would simply not be able to implement at a browser-level in JavaScript - for example, io, system and js could be considered unimplementable by the nature of their functionality.
+许多开发者认为CommonJS更适合服务器端开发，其中一个原因是存在一些异议即哪种格式在前Harmony时代应该作为一个事实上的标准并被使用而往前发展。反对CJS的观点包括在Javascript里CommonJS的许多API符合面向服务器的特性但是在浏览器端基本不能实现。例如，io、系统，js可以认为实际上无法实现它们的功能特性。
 
-许多开发者认为CommonJS更适合服务器端开发，其中一个原因是*** 在前Harmony时代的一个事实上的标准。反对CJS的观点包括CommonJS的API符合服务器端的特性但是在浏览器端基本不能实现。例如，io，系统以及js可以认为实际上无法实现它们的功能。
-
-That said, it's useful to know how to structure CJS modules regardless so that we can better appreciate how they fit in when defining modules which may be used everywhere. Modules which have applications on both the client and server include validation, conversion and templating engines. The way some developers are approaching choosing which format to use is opting for CJS when a module can be used in a server-side environment and using AMD if this is not the case.
-
-有种说法，了解CJS模块的结构是非常有用的，当定义可以更好地鉴别他们
+但也有种说法，了解CJS模块的结构无论如何是非常有用的，我们可以更好地鉴别他们是如何定义合适的可能到处使用的模块。在客户端和服务器端都有的模块包含验证、转换以及模板引擎。许多程序员都在努力接近的方式即某种格式可以对CJS进行优化，当某个模块可以在服务器端使用而在AMD里没有同样的模块。
 
 因为AMD模块能够使用插件从而使定义更加细粒度的东西，例如构造函数和函数变得有意义。而CJS模块只能定义对象，如果你尝试从它们那获得构造函数可能会觉得非常乏味。
 
