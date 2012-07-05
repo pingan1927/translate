@@ -1,13 +1,14 @@
 # Asynchronous Programming in JavaScript with “Promises” #
+
 >Published Monday, September 12, 2011 4:04 AM
 
-Asynchronous patterns are becoming more common and more important to moving web programming forward. They can be challenging to work with in JavaScript. To make asynchronous (or async) patterns easier, JavaScript libraries (like jQuery and Dojo) have added an abstraction called promises (or sometimes deferreds). With these libraries, developers can use promises in any browser with good ECMAScript 5 support. In this post, we’ll explore how to use promises in your web applications using XMLHttpRequest2 (XHR2) as a specific example.
+Asynchronous patterns are becoming more common and more important to moving web programming forward. They can be challenging to work with in JavaScript. To make asynchronous (or async) patterns easier, JavaScript libraries (like jQuery and Dojo) have added an abstraction called promises (or sometimes deferreds). With these libraries, developers can use promises in any browser with good ECMAScript 5 support. In this post, we’ll explore how to use promises in your web applications using [XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2) as a specific example.
 
 ## Benefits and Challenges with Asynchronous Programming ##
 
-As an example, consider a web page that starts an asynchronous operation like XMLHttpRequest2 (XHR2) or Web Workers. There’s a benefit as some work happens “in parallel.” There’s complexity for the developer to keep the page responsive to people and not block human interaction while coordinating what the web page is doing with the asynchronous work. There’s complexity because program execution no longer really follows a simple linear path.
+As an example, consider a web page that starts an asynchronous operation like [XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2) or [Web](http://blogs.msdn.com/b/ie/archive/2011/07/01/web-workers-in-ie10-background-javascript-makes-web-apps-faster.aspx) [Workers](http://blogs.msdn.com/b/ie/archive/2011/07/12/debugging-web-workers-in-ie10.aspx). There’s a benefit as some work happens “in parallel.” There’s complexity for the developer to keep the page responsive to people and not block human interaction while coordinating what the web page is doing with the asynchronous work. There’s complexity because program execution no longer really follows a simple linear path.
 
-When you make an asynchronous call, you need to handle both successful completion of the work as well as any potential errors that may arise during execution. Upon the successful completion of one asynchronous call, you may want to pass the result into make another Ajax request. This can introduce complexity through nested callbacks.
+When you make an asynchronous call, you need to handle both successful completion of the work as well as any potential errors that may arise during execution. Upon the successful completion of one asynchronous call, you may want to pass the result into make another Ajax request. This can introduce complexity through *nested callbacks*.
 
 ```
 function searchTwitter(term, onload, onerror) {
@@ -75,7 +76,7 @@ An example of this might be making a request to a third-party system where netwo
 
 At any moment in time, promises can be in one of three states: unfulfilled, resolved or rejected.
 
-To give an idea how the concept works, let’s start out with the CommonJS Promise/A proposal which has several derivatives in popular libraries. The then method on the promise object adds handlers for the resolved and rejected states. This function returns another promise object to allow for promise-pipelining, enabling the developer to chain together async operations where the result of the first operation will get passed to the second.
+To give an idea how the concept works, let’s start out with the [CommonJS Promise/A](http://wiki.commonjs.org/wiki/Promises/A) proposal which has several derivatives in popular libraries. The then method on the promise object adds handlers for the resolved and rejected states. This function returns another promise object to allow for promise-pipelining, enabling the developer to chain together async operations where the result of the first operation will get passed to the second.
 
 ```
     then(resolvedHandler, rejectedHandler);
@@ -189,7 +190,7 @@ There are many JavaScript libraries that are available to the developer which im
 
 ### The Dojo Toolkit ###
 
-The first widespread use of this pattern was with the dojo toolkit deferred object in version 0.9. Just like the CommonJS Promises/A proposal above, this object exposes a then method which allows the developer to handle both the fulfillment and error states and chain the promises together. The dojo.Deferred object exposes two additional methods; resolve which fulfills the promise, and reject, which sends the promise into the rejected state. Below is an example of using the dojo.Deferred object to make an Ajax request to an URL and parse the results.
+The first widespread use of this pattern was with the [dojo](http://dojotoolkit.org/reference-guide/dojo/Deferred.html) toolkit deferred object in version 0.9. Just like the CommonJS Promises/A proposal above, this object exposes a then method which allows the developer to handle both the fulfillment and error states and chain the promises together. The dojo.Deferred object exposes two additional methods; resolve which fulfills the promise, and reject, which sends the promise into the rejected state. Below is an example of using the dojo.Deferred object to make an Ajax request to an URL and parse the results.
 
 ```
     function searchTwitter(term) {
@@ -371,9 +372,10 @@ For consistency, the jQuery.ajax method also provides the success, error, and co
 
 ## Conclusion ##
 
-There are many options available to the developer on how to deal with the complexities of asynchronous programming. With well-known patterns such as promises and deferred objects, and libraries that expose them, the developer is able to create rich interactions which seamlessly bridge asynchronous requests. In this example, we discussed leveraging promises and deferred objects atop XMLHttpRequests but the patterns could easily be layered on top of Web Workers, the setImmediate API, the FileAPI, or any other asynchronous API. You can use common JavaScript libraries so you don’t have to write boilerplate code.
+There are many options available to the developer on how to deal with the complexities of asynchronous programming. With well-known patterns such as promises and deferred objects, and libraries that expose them, the developer is able to create rich interactions which seamlessly bridge asynchronous requests. In this example, we discussed leveraging promises and deferred objects atop XMLHttpRequests but the patterns could easily be layered on top of [Web Workers](http://www.w3.org/TR/workers/), the [setImmediate](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html) API, the [FileAPI](http://www.w3.org/TR/FileAPI/), or any other asynchronous API. You can use common JavaScript libraries so you don’t have to write boilerplate code.
 
-The promises pattern is a good start, but it’s not the end of the solution. In fact, many patterns are emerging to address asynchronous programming. We think this is an interesting development which makes our lives easier as web developers and think it can help you write your web applications as well. Happy coding!
+The [promises](http://msdn.microsoft.com/en-us/scriptjunkie/gg723713.aspx) pattern is a good start, but it’s not the end of the solution. In fact, [many patterns](https://github.com/joyent/node/wiki/modules#wiki-async-flow) are emerging to address asynchronous programming. We think this is an interesting development which makes our lives easier as web developers and think it can help you write your web applications as well. Happy coding!
 
 —Matt Podwysocki, JavaScript geek and consultant
+
 —Amanda Silver, Program Manager for JavaScript
