@@ -1,7 +1,10 @@
 # Asynchronous Programming in JavaScript with “Promises” #
+＃ 在JavaScript中使用“Promise”进行异步编程 ＃
 >Published Monday, September 12, 2011 4:04 AM
 
 Asynchronous patterns are becoming more common and more important to moving web programming forward. They can be challenging to work with in JavaScript. To make asynchronous (or async) patterns easier, JavaScript libraries (like jQuery and Dojo) have added an abstraction called promises (or sometimes deferreds). With these libraries, developers can use promises in any browser with good ECMAScript 5 support. In this post, we’ll explore how to use promises in your web applications using XMLHttpRequest2 (XHR2) as a specific example.
+
+在推动web 编程向前发展方面异步模式变得越来越普通和重要。ta
 
 ## Benefits and Challenges with Asynchronous Programming ##
 
