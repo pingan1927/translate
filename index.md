@@ -17,11 +17,11 @@
 
 > 关于脚本加载器的说明
 
-很难在不谈论脚本加载器的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个基本了解从而通过上下文对模块格式的解释更能理解。
+很难在不谈论 [脚本加载器](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261)的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个**基本了解**从而通过上下文对模块格式的解释更能理解。
 
-在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但我强烈建议阅读John Hann关于curl.js的文章以及James Burke的RequireJS的API文档以了解更多。
+在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但我强烈建议阅读John Hann关于[curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/)的文章以及James Burke的 [RequireJS](http://requirejs.org/docs/api.html)的API文档以了解更多。
 
-从生产角度来看，在与这些模块一起工作时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时非常值得推荐。有趣地是，配合Almond AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的切换到开发环境。
+从生产角度来看，在与这些模块一起工作时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时非常值得推荐。有趣地是，配合[Almond](https://github.com/jrburke/almond) AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的切换到开发环境。
 
 也就是说，James Burke有可能会，将这些笔记记在脑子里，让我们开始吧。
 
@@ -31,9 +31,9 @@
 
 AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
 
-AMD模块格式本身是一个提议，用于定义模块使模块以及依赖都可以被异步加载。它有一系列显著的优势，包括两者都是异步的以及删除一般在代码和模块识别之间可能的高耦合性天生的高度灵活性。许多开发者喜欢使用它并且认为这是一个被提及的面向ES Harmony模块系统的可靠的跳板。
+AMD模块格式本身是一个提议，用于定义模块使模块以及依赖都可以被[异步](http://dictionary.reference.com/browse/asynchronous)加载。它有一系列显著的优势，包括两者都是异步的以及删除一般在代码和模块识别之间可能的高耦合性天生的高度灵活性。许多开发者喜欢使用它并且认为这是一个被提及的面向ES Harmony[模块系统](http://wiki.ecmascript.org/doku.php?id=harmony:modules)的可靠的跳板。
 
-AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了amdjs组。
+AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了[amdjs](https://github.com/amdjs)组。
 
 今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS AMD格式等术语已在广泛的场合被了解，但最好上还是仅指AMD或者异步模块支持（）因为不是所有的CJS目录的参与者都希望如此。
 
@@ -41,7 +41,7 @@ AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是
 
 ### 模块入门 ###
 
-在这里需要关注的两个关键概念是用于促进模块定义的define方法以及用于处理依赖加载的require方法。根据提议，define使用以下签名明码来定义命名的或者未命名的模块：
+在这里需要关注的两个关键概念是用于促进模块定义的`defin`e方法以及用于处理依赖加载的`require`方法。根据提议，*define*使用以下签名明码来定义命名的或者未命名的模块：
 
 ```
 define(
@@ -51,9 +51,9 @@ define(
 );
 ```
 
-正如你在行内注释了解到的一样，module_id是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
+正如你在行内注释了解到的一样，`module_id`是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
 
-当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过使模块碎片化来避免文件名和代码的复制。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下module_id相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器在CommonJS例如r.js环境下工作。
+当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过使模块碎片化来避免文件名和代码的复制。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下`module_id`相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器在CommonJS例如[r.js](https://github.com/jrburke/r.js/)环境下工作。
 
 回到define定义上，dependencies参数表现为一个依赖数组，这个依赖数组是你定义的模块所需要的。第三个参数（'definition function'）则是一个函数，用来执行模块的实例化工作。一个标准的模块应该被定义成以下形式：
 
@@ -193,21 +193,21 @@ define(['lib/Deferred'], function( Deferred ){
 ### 为什么说AMD是编写模块化的JavaScript的好选择？ ###
 
 - 为如何处理定义灵活的模块提供了一个明确的建议。
-- 语法比目前我们依靠的全局命名空间以及**&amp;script&amp;**标签等解决方案清晰。有一个干净的方式用来声明独立的模块以及可能的依赖。
+- 语法比目前我们依靠的全局命名空间以及`<script>`标签等解决方案清晰。有一个干净的方式用来声明独立的模块以及可能的依赖。
 - 模块定义是经过封装的，帮助我们避免污染全局命名空间。
 - 比起其他可选的解决方案（例如很快会介绍的CommonJS）工作得更好。在跨域、本地、以及debug方面没有问题。使用时不需要依赖服务器端的工具。大多数AMD的加载器在浏览器端加载模块时并不需要build过程。
 - 提供了 `transport`方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
 - 当需要是可以懒加载脚本。
 
 ### 相关阅读 ###
-- The RequireJS Guide To AMD
-- What's the fastest way to load AMD modules?
-- AMD vs. CJS, what's the better format?
-- AMD Is Better For The Web Than CommonJS Modules
-- The Future Is Modules Not Frameworks
-- AMD No Longer A CommonJS Specification
-- On Inventing JavaScript Module Formats And Script Loaders
-- The AMD Mailing List
+- [The RequireJS Guide To AMD](http://requirejs.org/docs/whyamd.html)
+- [What's the fastest way to load AMD modules?](http://unscriptable.com/index.php/2011/09/21/what-is-the-fastest-way-to-load-amd-modules/)
+- [AMD vs. CJS, what's the better format?](http://unscriptable.com/index.php/2011/09/30/amd-versus-cjs-whats-the-best-format/)
+- [AMD Is Better For The Web Than CommonJS Modules](http://blog.millermedeiros.com/2011/09/amd-is-better-for-the-web-than-commonjs-modules/)
+- [The Future Is Modules Not Frameworks](http://unscriptable.com/code/Modules-Frameworks/)
+- [AMD No Longer A CommonJS Specification](http://groups.google.com/group/commonjs/browse_thread/thread/96a0963bcb4ca78f/cf73db49ce267ce1?lnk=gst#)
+- [On Inventing JavaScript Module Formats And Script Loaders](http://tagneto.blogspot.com/2011/04/on-inventing-js-module-formats-and.html)
+- [The AMD Mailing List](http://groups.google.com/group/amd-implement)
 
 ### AMD模块和Dojo ###
 
@@ -220,7 +220,7 @@ define(["dijit/Tooltip"], function( Tooltip ){
 });
 ```
 
-请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的dojo.require()模块加载器等你习惯的模块加载器使用。
+请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的[dojo.require()](http://docs.dojocampus.org/dojo/require)模块加载器等你习惯的模块加载器使用。
 
 对于模块引用的疑惑，有许多有趣的陷阱，知道的话是很有用的。虽然AMD-主张的引用模块的方式在依赖列表里用一系列匹配参数声明它们，但这没有被Dojo 1.6的构建系统所支持-它仅仅在兼容AMD的加载器上才能工作。例如：
 
@@ -246,7 +246,7 @@ define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
 
 ### AMD模块的设计模式（Dojo）
 
-如果你关注了我之前几篇文章关于设计模式的好处，将知道这些设计模式在提高我们找到一般开发难题的结构性解决方案是多么的高效率。John Hann最近给出了一个非常出色的关于AMD设计模式的presentation，包含了Singleton, Decorator, Mediator以及其它。如果有机会强烈建议大家去阅读下他的slides。
+如果你关注了我之前几篇文章关于设计模式的好处，将知道这些设计模式在提高我们找到一般开发难题的结构性解决方案是多么的高效率。[John Hann](http://twitter.com/unscriptable)最近给出了一个非常出色的关于AMD设计模式的presentation，包含了Singleton, Decorator, Mediator以及其它。如果有机会强烈建议大家去阅读下他的[slides](http://unscriptable.com/code/AMD-module-patterns/)。
 
 这些模式的许多例子可以从下面找到：
 
@@ -345,7 +345,7 @@ JQuery 1.7所支持的核心特性之一就是将JQuery注册成为一个asynchr
 
 1.7版本带给我们的新东西就是帮助我们避免第三方代码一些问题，如在一个页面里意外加载了某个版本的jQuery，而这是页面所有者不希望的。你不希望其它实例妨碍到自己本身，这种方式有利于这样的目标的实现。
 
-这种工作方式即脚本加载器被使用表明可以通过设定一个属性来支持jQuery多版本，define.amd.jQuery等价于true。更加详细的实现细节则更加有趣，我们将JQuery注册为一个命名模块，虽然这有一定的风险，因为它可能跟其他可使用AMD的define方法的文件串联在一起，而非使用一个理解AMD模块定义的合适的的串联脚本。
+这种工作方式即脚本加载器被使用表明可以通过设定一个属性来支持jQuery多版本，`define.amd.jQuery`等价于true。更加详细的实现细节则更加有趣，我们将JQuery注册为一个命名模块，虽然这有一定的风险，因为它可能跟其他可使用AMD的`define()`方法的文件串联在一起，而非使用一个理解AMD模块定义的合适的的串联脚本。
 
 命名的AMD提供了一个针对大多数用例稳健和安全的的safety blanket。
 
@@ -374,7 +374,7 @@ define.amd = {
 
 #### 巧妙的JQuery插件 ####
 
-最近讨论了关于如何使用UMD模式来编写jQuery插件的一些想法和例子。UMD定义模块使之能够在客户端和服务器端工作，就像目前所有可见的流行脚本加载器一样。虽然这是一个新的领域，很多概念都在处在定稿之中，在下面标题为AMD&&CommonJS的段落可以随意看看代码实例，并让我知道有哪些我们可以做的更好的地方。
+最近讨论了关于如何使用Universal Module Definition([UMD](https://github.com/umdjs))模式来编写jQuery插件的一些[想法和例子](http://coding.smashingmagazine.com/2011/10/11/essential-jquery-plugin-patterns/)。UMD定义模块使之能够在客户端和服务器端工作，就像目前所有可见的流行脚本加载器一样。虽然这是一个新的领域，很多概念都在处在定稿之中，在下面标题为AMD&&CommonJS的段落可以随意看看代码实例，并让我知道有哪些我们可以做的更好的地方。
 
 ### 那些脚本加载器和框架支持AMD？ ###
 
@@ -396,15 +396,15 @@ define.amd = {
 
 以上细碎的例子能够真正地说明AMD模块是多没有用，更希望向大家提供理解他们是如何工作的基础。
 
-你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了IBM、BBC iPlayer，这突出了在企业级别开发者是多么严肃地对待这个格式。
+你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了[IBM](http://www.ibm.com/)、[BBC iPlayer](http://www.bbc.co.uk/iplayer/)，这突出了在企业级别开发者是多么严肃地对待这个格式。
 
-至于要知道许多开发者在他们的程序中选择AMD模块的原因，你应该对James Burke写的文章感兴趣。
+至于要知道许多开发者在他们的程序中选择AMD模块的原因，你应该对James Burke写的[文章](http://tagneto.blogspot.com/2011/04/on-inventing-js-module-formats-and.html)感兴趣。
 
 ## CommonJS ##
 
 > 针对服务器端优化的模块格式
 
-CommonJS是一个志愿者工作组，目标是设计、原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了模块以及包标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖更广泛的关注点，例如io，文件系统，promise等。
+[CommonJS](http://www.commonjs.org/)是一个志愿者工作组，目标是设计、原型化以及标准化Javascript API。迄今为止，他们已经尝试认可了[模块](http://www.commonjs.org/specs/modules/1.0/)以及[包](http://wiki.commonjs.org/wiki/Packages/1.0)标准。CommonJS模块的提案为服务器端声明模块时指定一个简单的API而不像AMD尝试覆盖更广泛的关注点，例如io，文件系统，promise等。
 
 ### 入门 ###
 
@@ -515,10 +515,10 @@ exports.helloWorld = function(){
 
 #### 服务器端： ####
 
-- Nodehttp://nodejs.org
+- Node http://nodejs.org
 - Narwhal https://github.com/tlrobinson/narwhal
-- Perseverehttp://www.persvr.org/
-- Wakandahttp://www.wakandasoft.com/
+- Persevere http://www.persvr.org/
+- Wakanda http://www.wakandasoft.com/
 
 ### CJS适合浏览器吗？ ###
 
@@ -534,12 +534,12 @@ exports.helloWorld = function(){
 
 #### 相关阅读 ###
 
-- Demystifying CommonJS Modules
-- JavaScript Growing Up
-- The RequireJS Notes On CommonJS
-- Taking Baby Steps With Node.js And CommonJS Creating Custom Modules
-- Asynchronous CommonJS Modules for the Browser
-- The CommonJS Mailing List
+- [Demystifying CommonJS Modules](http://dailyjs.com/2010/10/18/modules/)
+- [JavaScript Growing Up](http://www.slideshare.net/davidpadbury/javascript-growing-up)
+- [The RequireJS Notes On CommonJS](http://requirejs.org/docs/commonjs.html)
+- [Taking Baby Steps With Node.js And CommonJS Creating Custom Modules](http://elegantcode.com/2011/02/04/taking-baby-steps-with-node-js-commonjs-and-creating-custom-modules/)
+- [Asynchronous CommonJS Modules for the Browser](http://www.sitepen.com/blog/2010/07/16/asynchronous-commonjs-modules-for-the-browser-and-introducing-transporter/)
+- [The CommonJS Mailing List](http://groups.google.com/group/commonjs)
 
 ## AMD 和 CommonJS ##
 > 竞争，但同样是效的标准
@@ -565,7 +565,7 @@ define( function (require, exports, module){
 });
 ```
 
-### AMD/CommonJS 统一模块定义（变种2， UMDjs） ###
+### AMD/CommonJS 统一模块定义（变种2， [UMDjs](https://github.com/umdjs/umd)） ###
 
 ```
 /**
@@ -734,15 +734,15 @@ $(function(){
 ## ES Harmony ##
 > 未来的模块
 
-TC39，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多程序员（例如Alex Russel）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
+[TC39](http://www.ecma-international.org/memento/TC39.htm)，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多程序员（例如[Alex Russel](http://twitter.com/slightlylate)）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
 
-基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的模块，模块加载器以及其他。在这一节，我将为你展示一些ES.next中针对模块的语法代码示例，你可以抢先体验到他们会是什么。
+基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的[模块](http://wiki.ecmascript.org/doku.php?id=harmony:modules)，[模块加载器](http://wiki.ecmascript.org/doku.php?id=harmony:module_loaders)以及[其他](http://wiki.ecmascript.org/doku.php?id=harmony:proposals)。在这一节，我将为你展示一些ES.next中针对模块的语法代码示例，你可以抢先体验到他们会是什么。
 
-> **注意：** 尽管Harmony仍然处于提案阶段，你却已经可以尝试部分ES.next的特性。感谢Google's Traceur编译器，已经有了对编写模块化JavaScript的原生支持。为了在短时间内安装和运行Traceur，请阅读开始指南。这里也有一个JSConf的presentation值得一看，如果你对这个项目有兴趣进一步了解的话。
+> **注意：** 尽管Harmony仍然处于提案阶段，你却已经可以尝试部分ES.next的特性。感谢Google's [Traceur](http://code.google.com/p/traceur-compiler/)编译器，已经有了对编写模块化JavaScript的原生支持。为了在短时间内安装和运行Traceur，请阅读[开始](http://code.google.com/p/traceur-compiler/wiki/GettingStarted)指南。这里也有一个JSConf的[presentation](http://traceur-compiler.googlecode.com/svn/branches/v0.10/presentation/index.html)值得一看，如果你对这个项目有兴趣进一步了解的话。
 
 ### 包含Imports和Exports的模块 ###
 
-如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念被建议成一种略微简洁的方式，其中依赖被制定使用import关键字。export和你期望的区别也不是很大，我想大多程序员看了下面的代码之后会立刻“把握”到它的。
+如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念被建议成一种略微简洁的方式，其中依赖被制定使用`import`关键字。`export`和你期望的区别也不是很大，我想大多程序员看了下面的代码之后会立刻“把握”到它的。
 
 * **import** 声明作为一个局部变量绑定模块的exports，可以重命名以避免命名碰撞/冲突。
 
@@ -795,7 +795,7 @@ cakeFactory.oven.makeMuffin('large');
 
 ### 模块加载器API ###
 
-模块加载器建议在一个高度可控的上下文中为加载模块描述描述一个动态的API。加载器上的签名Signatures支持包括load（url，模块实例，错误）来加载模块、createModule（对象，全局模块引用）以及其它。这是在我们最初定义的模块中实现的动地态加载的另外一个例子。注意与最后一个例子不一样，我们从一个远程源获取模块，模块加载器能够更好地适应动态上下文。
+模块加载器建议在一个高度可控的上下文中为加载模块描述描述一个动态的API。加载器上的签名Signatures支持包括`load（url，moduleInstance，error）`来加载模块,`createModule（object，globalModuleReferences）`以及[其它](http://wiki.ecmascript.org/doku.php?id=harmony:module_loaders)。这是在我们最初定义的模块中实现的动地态加载的另外一个例子。注意与最后一个例子不一样，我们从一个远程源获取模块，模块加载器能够更好地适应动态上下文。
 
 ```
 Loader.load('http://addyosmani.com/factory/cakes.js',
@@ -836,9 +836,9 @@ module stdlib from '@std';
 
 ### 含有构造器、Getters、Setters的Classes ###
 
-类的概念一直都是伴随着较真、有争议的问题。目前为止我们在处理这个问题时既没有回到JavaScript的原型特性也没有通过使用提供class定义能力的能够表现出与原型一样行为的框架或者抽象。
+类的概念一直都是伴随着较真、有争议的问题。目前为止我们在处理这个问题时既没有回到JavaScript的[原型](http://javascript.crockford.com/prototypal.html)特性也没有通过使用提供class定义能力的能够表现出与原型一样行为的框架或者抽象。
 
-在Harmony，类与constructors和真正的私有化一起作为语言的部分。在下面的例子中，包含了一些行内注释用来帮助理解class是如何被结构化的，但是你也可能会注意到这里缺少了`function`这个单词。这并不是一个typo错误：TC39已经意识并努力减少function关键字的滥用并希望这样能够简化我们的代码。
+在Harmony，类与constructors和真正的私有化一起作为语言的部分。在下面的例子中，包含了一些行内注释用来帮助理解class是如何被结构化的，但是你也可能会注意到这里缺少了'function'这个单词。这并不是一个typo错误：TC39已经意识并努力减少`function`关键字的滥用并希望这样能够简化我们的代码。
 
 ```
 class Cake{
@@ -892,11 +892,11 @@ class Cake{
 
 #### 相关阅读 ####
 
-- A First Look At The Upcoming JavaScript Modules
-- David Herman On JavaScript/ES.Next (Video)
-- ES Harmony Module Proposals
-- ES Harmony Module Semantics/Structure Rationale
-- ES Harmony Class Proposals
+- [A First Look At The Upcoming JavaScript Modules](http://www.2ality.com/2011/03/first-look-at-upcoming-javascript.html)
+- [David Herman On JavaScript/ES.Next (Video)](http://blog.mozilla.com/dherman/2011/02/23/my-js-meetup-talk/)
+- [ES Harmony Module Proposals](http://wiki.ecmascript.org/doku.php?id=harmony:modules)
+- [ES Harmony Module Semantics/Structure Rationale](http://wiki.ecmascript.org/doku.php?id=harmony:modules_rationale)
+- [ES Harmony Class Proposals](http://wiki.ecmascript.org/doku.php?id=harmony:classes)
 
 ## 结论和进一步深入 ##
 > 回顾
@@ -905,6 +905,6 @@ class Cake{
 
 简而言之，我推荐大家尝试下今天推荐的格式，因为这些格式提供了很强的功效和灵活性，从而在我们构建基于可复用的功能块的程序时能够帮助到我们。
 
-差不多到这里为止了。如果你有任何关于今天覆盖到的话题的疑问，你可以推我，我将会帮助你。
+差不多到这里为止了。如果你有任何关于今天覆盖到的话题的疑问，你可以[twitter](http://twitter.com/addyosmani)我，我将会帮助你。
 
-这篇文章的技术review使用了Diigo(for Google Chrome).Diigo是一个免费的工具，允许你在web上加入评论以及高亮到文本的任何一个地方。如果你有任何更正或者扩展需要提供，也请使用Diigo(或者GitHub gist),我会认真处理每一个你们发的point。
+这篇文章的技术review使用了[Diigo](http://www.diigo.com/)(for [Google Chrome](http://www.diigo.com/tools/chrome_extension)).Diigo是一个免费的工具，允许你在web上加入评论以及高亮到文本的任何一个地方。如果你有任何更正或者扩展需要提供，也请使用Diigo(或者GitHub [gist](http://gist.github.com/)),我会认真处理每一个你们发的point。
