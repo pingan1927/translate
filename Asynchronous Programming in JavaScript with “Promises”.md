@@ -5,13 +5,18 @@
 
 Asynchronous patterns are becoming more common and more important to moving web programming forward. They can be challenging to work with in JavaScript. To make asynchronous (or async) patterns easier, JavaScript libraries (like jQuery and Dojo) have added an abstraction called promises (or sometimes deferreds). With these libraries, developers can use promises in any browser with good ECMAScript 5 support. In this post, we’ll explore how to use promises in your web applications using [XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2) as a specific example.
 
-在推动web 编程向前发展方面异步模式变得越来越普通和重要。ta
+为推动web 编程向前发展异步模式变得越来越普通和重要。使用JavaScript工作的挑战越发的大。为了使异步的模式变得简单，JavaScript库（像jQuery以及Dojo）已经都添加了一种叫做promise的抽象（有时也叫做deferred）。通过这些库，开发人员可以在每个浏览器中使用promise并得到很好的ECMAScript 5支持。在这篇文章中，我们一起探索下如何在你的web应用程序中通过将[XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2)作为一个特定的例子来使用promise。
 
 ## Benefits and Challenges with Asynchronous Programming ##
+## 使用异步编程的好处以及挑战 ##
 
 As an example, consider a web page that starts an asynchronous operation like [XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2) or [Web](http://blogs.msdn.com/b/ie/archive/2011/07/01/web-workers-in-ie10-background-javascript-makes-web-apps-faster.aspx) [Workers](http://blogs.msdn.com/b/ie/archive/2011/07/12/debugging-web-workers-in-ie10.aspx). There’s a benefit as some work happens “in parallel.” There’s complexity for the developer to keep the page responsive to people and not block human interaction while coordinating what the web page is doing with the asynchronous work. There’s complexity because program execution no longer really follows a simple linear path.
 
+作为一个例子，请考虑下某个网页，以例如[XMLHttpRequest2](http://www.w3.org/TR/XMLHttpRequest2/) (XHR2) 或者 [Web](http://blogs.msdn.com/b/ie/archive/2011/07/01/web-workers-in-ie10-background-javascript-makes-web-apps-faster.aspx) [Workers](http://blogs.msdn.com/b/ie/archive/2011/07/12/debugging-web-workers-in-ie10.aspx)的异步操作运行。有许多好处，例如许多任务可以“并行”地发生。但对于当页面正在处理异步任务时开发人员保持页面对于用户的响应以及不阻塞人机交互是个复杂的事情。之所以复杂是因为程序的执行不再真正地遵循一条简单的线形路径。
+
 When you make an asynchronous call, you need to handle both successful completion of the work as well as any potential errors that may arise during execution. Upon the successful completion of one asynchronous call, you may want to pass the result into make another Ajax request. This can introduce complexity through *nested callbacks*.
+
+当你作出一个异步的响应，你必须处理任务的成功返回并同时处理在执行时可能产生的任何潜在的错误。根据一个异步请求的成功完成，你可能将返回的结果作为另外一个Ajax的请求中。这可能通过*嵌套回调*产生复杂的事情。
 
 ```
 function searchTwitter(term, onload, onerror) {
@@ -64,11 +69,16 @@ function loadTweets() {
 
 The nested callbacks make the code hard to understand – what code is business logic specific to the app and what is the boilerplate code required to deal with the asynchronous call? In addition, due to the nested callbacks, the error handling becomes fragmented. We must check several places to see if an error occurred.
 
+嵌套回调让代码难以理解-哪些代码是应用具体的业务逻辑而哪些又是为处理异步请求而需要的模版代码？另外，由于嵌套回调，需要处理的错误变得支离破碎。我们需要确认许多地方来验证某个错误是否发生。
+
 To reduce the complexity of coordinating asynchronous behavior, developers have looked for a way to perform consistent, easy to understand error handling with an alternative to nested callbacks.
+
+为减少协调异步行为的复杂性，开发人员找到了一种替代嵌套回调，协调一致的，错误处理容易理解的方法。
 
 ## Promises ##
 
 One pattern is a promise, which represents the result of a potentially long running and not necessarily complete operation. Instead of blocking and waiting for the long-running computation to complete, the pattern returns an object which represents the promised result.
+其中的一直模式就是promise，
 
 An example of this might be making a request to a third-party system where network latency is uncertain. Instead of blocking the entire application while waiting, the application is free to do other things until the value is needed. A promise implements a method for registering callbacks for state change notifications, commonly named the then method:
 
