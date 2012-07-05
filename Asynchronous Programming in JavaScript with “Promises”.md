@@ -70,8 +70,8 @@ One pattern is a promise, which represents the result of a potentially long runn
 An example of this might be making a request to a third-party system where network latency is uncertain. Instead of blocking the entire application while waiting, the application is free to do other things until the value is needed. A promise implements a method for registering callbacks for state change notifications, commonly named the then method:
 
 ```
-    var results = searchTwitter(term).then(filterResults);
-    displayResults(results);
+var results = searchTwitter(term).then(filterResults);
+displayResults(results);
 ```
 
 At any moment in time, promises can be in one of three states: unfulfilled, resolved or rejected.
@@ -79,7 +79,7 @@ At any moment in time, promises can be in one of three states: unfulfilled, reso
 To give an idea how the concept works, let’s start out with the [CommonJS Promise/A](http://wiki.commonjs.org/wiki/Promises/A) proposal which has several derivatives in popular libraries. The then method on the promise object adds handlers for the resolved and rejected states. This function returns another promise object to allow for promise-pipelining, enabling the developer to chain together async operations where the result of the first operation will get passed to the second.
 
 ```
-    then(resolvedHandler, rejectedHandler);
+then(resolvedHandler, rejectedHandler);
 ```
 
 The resolvedHandler callback function is invoked when the promise enters the fulfilled state, passing in the result from the computation. The rejectedHandler is invoked when the promise goes into the failed state.
@@ -87,99 +87,99 @@ The resolvedHandler callback function is invoked when the promise enters the ful
 We’ll revisit the example above using a pseudo code example of a promise to make the Ajax request to search Twitter, populate the screen with data, and handle errors. Let’s start with an example of what a promise library might look like if we were designing one from scratch with just the very basics. First we’ll need some form of object to keep the promise.
 
 ```
-    var Promise = function () {
-        /* initialize promise */
-    };
+var Promise = function () {
+    /* initialize promise */
+};
 ```
 
 Next, we’ll need to implement the then method which allows us to chain together operations based upon state change of our promise. This method takes two functions for handling when the promise is resolved and for when the promise is rejected.
 
 ```
-    Promise.prototype.then = function (onResolved, onRejected) {
-        /* invoke handlers based upon state transition */
-    };
+Promise.prototype.then = function (onResolved, onRejected) {
+    /* invoke handlers based upon state transition */
+};
 ```
 
 We’ll also need a couple of methods to perform a state transition between unfulfilled and resolved or rejected states.
 
 ```
-    Promise.prototype.resolve = function (value) {
-        /* move from unfulfilled to resolved */
-    };
+Promise.prototype.resolve = function (value) {
+    /* move from unfulfilled to resolved */
+};
 
-    Promise.prototype.reject = function (error) {
-        /* move from unfulfilled to rejected */
-    };
+Promise.prototype.reject = function (error) {
+    /* move from unfulfilled to rejected */
+};
 ```
 Now that we have some boilerplate for what a Promise object could be, let’s walk through the example from above of querying Twitter for #IE10 tagged tweets. First, we’ll create a method for making an Ajax GET request using the XMLHttpRequest2 to a given URL and wrap it in a promise. Next, we’ll create a method specifically for Twitter calling our Ajax wrapper method with a given search term. Finally, we’ll invoke our search function and display the results in an unordered list.
 
 ```
-    function searchTwitter(term) {
+function searchTwitter(term) {
 
-        var url, xhr, results, promise;
-        url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
-        promise = new Promise();
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+    var url, xhr, results, promise;
+    url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
+    promise = new Promise();
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
 
-        xhr.onload = function (e) {
-            if (this.status === 200) {
-                results = JSON.parse(this.responseText);
-                promise.resolve(results);
-            }
-        };
-
-        xhr.onerror = function (e) {
-            promise.reject(e);
-        };
-
-        xhr.send();
-
-        return promise;
-
-    }
-
-    function loadTweets() {
-        var container = document.getElementById('container');
-
-        searchTwitter('#IE10').then(function (data) {
-            data.results.forEach(function (tweet) {
-                var el = document.createElement('li');
-                el.innerText = tweet.text;
-                container.appendChild(el);
-            });
-        }, handleError);
-    }
-```
-
-Now that we’re able to make a single Ajax request as a Promise, let’s discuss a scenario when we want to make more than one Ajax request and coordinate the results. To handle this scenario, we’ll create a when method on our Promise object to queue the promises for to be invoked. Once the promises move from unfulfilled to either resolved or rejected, the appropriate handler is called in the then method. The when method is essentially a fork-join operation that awaits completion of all of the operations before continuing.
-
-```
-    Promise.when = function () {
-        /* handle promises arguments and queue each */
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            results = JSON.parse(this.responseText);
+            promise.resolve(results);
+        }
     };
-```
 
-Now we can queue up multiple promises simultaneously, for example by searching for both #IE10 and #IE9 on Twitter.
+    xhr.onerror = function (e) {
+        promise.reject(e);
+    };
 
-```
-    var container, promise1, promise2;
+    xhr.send();
 
-    container = document.getElementById('container');
+    return promise;
 
-    promise1 = searchTwitter('#IE10');
-    promise2 = searchTwitter('#IE9');
+}
 
-    Promise.when(promise1, promise2).then(function (data1, data2) {
-        /* Reshuffle due to date */
-        var totalResults = concatResults(data1.results, data2.results);
+function loadTweets() {
+    var container = document.getElementById('container');
 
-        totalResults.forEach(function (tweet) {
+    searchTwitter('#IE10').then(function (data) {
+        data.results.forEach(function (tweet) {
             var el = document.createElement('li');
             el.innerText = tweet.text;
             container.appendChild(el);
         });
     }, handleError);
+}
+```
+
+Now that we’re able to make a single Ajax request as a Promise, let’s discuss a scenario when we want to make more than one Ajax request and coordinate the results. To handle this scenario, we’ll create a when method on our Promise object to queue the promises for to be invoked. Once the promises move from unfulfilled to either resolved or rejected, the appropriate handler is called in the then method. The when method is essentially a fork-join operation that awaits completion of all of the operations before continuing.
+
+```
+Promise.when = function () {
+    /* handle promises arguments and queue each */
+};
+```
+
+Now we can queue up multiple promises simultaneously, for example by searching for both #IE10 and #IE9 on Twitter.
+
+```
+var container, promise1, promise2;
+
+container = document.getElementById('container');
+
+promise1 = searchTwitter('#IE10');
+promise2 = searchTwitter('#IE9');
+
+Promise.when(promise1, promise2).then(function (data1, data2) {
+    /* Reshuffle due to date */
+    var totalResults = concatResults(data1.results, data2.results);
+
+    totalResults.forEach(function (tweet) {
+        var el = document.createElement('li');
+        el.innerText = tweet.text;
+        container.appendChild(el);
+    });
+}, handleError);
 ```
 
 The important thing to remember is that the code in these samples is nothing but normal JavaScript. Web developers certainly create their own Promise-like libraries; but for convenience and consistency you can leverage the promises patterns exposed in common JavaScript libraries.
@@ -193,63 +193,63 @@ There are many JavaScript libraries that are available to the developer which im
 The first widespread use of this pattern was with the [dojo](http://dojotoolkit.org/reference-guide/dojo/Deferred.html) toolkit deferred object in version 0.9. Just like the CommonJS Promises/A proposal above, this object exposes a then method which allows the developer to handle both the fulfillment and error states and chain the promises together. The dojo.Deferred object exposes two additional methods; resolve which fulfills the promise, and reject, which sends the promise into the rejected state. Below is an example of using the dojo.Deferred object to make an Ajax request to an URL and parse the results.
 
 ```
-    function searchTwitter(term) {
-        var url, xhr, results, def;
-        url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
-        def = new dojo.Deferred();
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+function searchTwitter(term) {
+    var url, xhr, results, def;
+    url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
+    def = new dojo.Deferred();
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
 
-        xhr.onload = function (e) {
-            if (this.status === 200) {
-                results = JSON.parse(this.responseText);
-                def.resolve(results);
-            }
-        };
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            results = JSON.parse(this.responseText);
+            def.resolve(results);
+        }
+    };
 
-        xhr.onerror = function (e) {
-            def.reject(e);
-        };
+    xhr.onerror = function (e) {
+        def.reject(e);
+    };
 
-        xhr.send();
+    xhr.send();
 
-        return def;
-    }
+    return def;
+}
 
-    dojo.ready(function () {
-        var container = dojo.byId('container');
+dojo.ready(function () {
+    var container = dojo.byId('container');
 
-        searchTwitter('#IE10').then(function (data) {
-            data.results.forEach(function (tweet) {
-                dojo.create('li', {
+    searchTwitter('#IE10').then(function (data) {
+        data.results.forEach(function (tweet) {
+            dojo.create('li', {
                 innerHTML: tweet.text
             }, container);
         });
     });
-    });
+});
 ```
 
 Fortunately, some of the Ajax methods such as dojo.xhrGet already return a dojo.Deferred object, so you don’t need to worry about wrapping those methods yourself.
 
 ```
-    var deferred = dojo.xhrGet({
-        url: "search.json",
-        handleAs: "json"
-    });
+var deferred = dojo.xhrGet({
+    url: "search.json",
+    handleAs: "json"
+});
 
-    deferred.then(function (data) {
-        /* handle results */
-    }, function (error) {
-        /* handle error */
-    });
+deferred.then(function (data) {
+    /* handle results */
+}, function (error) {
+    /* handle error */
+});
 ```
 
 The next concept that Dojo introduces is the dojo.DeferredList, which allows the developer to handle multiple dojo.Deferred objects at once and then return the results to the callback handler passed to the then function. This mirrors the when method we had on our own version of the promise object.
 
 ```
-    dojo.require("dojo.DeferredList");
+dojo.require("dojo.DeferredList");
 
-    dojo.ready(function () {
+dojo.ready(function () {
     var container, def1, def2, defs;
     container = dojo.byId('container');
 
@@ -261,18 +261,18 @@ The next concept that Dojo introduces is the dojo.DeferredList, which allows the
         // Handle exceptions
         if (!results[0][0] || !results[1][0]) {
             dojo.create("li", {
-            innerHTML: 'an error occurred'
-        }, container);
-        return;
-    }
+                innerHTML: 'an error occurred'
+            }, container);
+            return;
+        }
 
-    var totalResults = concatResults(data[0][1].results, data[1][1].results);
+        var totalResults = concatResults(data[0][1].results, data[1][1].results);
 
-    totalResults.forEach(function (tweet) {
-        dojo.create("li", {
-            innerHTML: tweet.text
-        }, container);
-    });
+        totalResults.forEach(function (tweet) {
+            dojo.create("li", {
+                innerHTML: tweet.text
+            }, container);
+        });
     });
 });
 ```
@@ -284,60 +284,60 @@ The Dojo Toolkit may have been the first one to implement this pattern, but ther
 jQuery introduced a new concept in version 1.5 called Deferred which is also a derivative implementation of the CommonJS Promises/A proposal. The Deferred object exposes a then method which allows the developer to handle both the fulfillment and error states. Like dojo, this object also exposes resolve and reject. The developer can create a Deferred object in jQuery by calling the $.Deferred function.
 
 ```
-    function xhrGet(url) {
-        var xhr, results, def;
-        def = $.Deferred();
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+function xhrGet(url) {
+    var xhr, results, def;
+    def = $.Deferred();
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
 
-        xhr.onload = function (e) {
-            if (this.status === 200) {
-                results = JSON.parse(this.responseText);
-                def.resolve(results);
-            }
-        };
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            results = JSON.parse(this.responseText);
+            def.resolve(results);
+        }
+    };
 
-        xhr.onerror = function (e) {
-            def.reject(e);
-        };
+    xhr.onerror = function (e) {
+        def.reject(e);
+    };
 
-        xhr.send();
+    xhr.send();
 
-        return def;
-    }
+    return def;
+}
 
-    function searchTwitter(term) {
-        var url, xhr, results, def;
-        url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
-        def = $.Deferred();
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+function searchTwitter(term) {
+    var url, xhr, results, def;
+    url = 'http://search.twitter.com/search.json?rpp=100&q=' + term;
+    def = $.Deferred();
+    xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
 
-        xhr.onload = function (e) {
-                if (this.status === 200) {
-                    results = JSON.parse(this.responseText);
-                    def.resolve(results);
-                }
-            };
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            results = JSON.parse(this.responseText);
+            def.resolve(results);
+        }
+    };
 
-            xhr.onerror = function (e) {
-            def.reject(e);
-        };
+    xhr.onerror = function (e) {
+        def.reject(e);
+    };
 
-        xhr.send();
+    xhr.send();
 
-        return def;
-    }
+    return def;
+}
 
-    $(document).ready(function () {
-        var container = $('#container');
+$(document).ready(function () {
+    var container = $('#container');
 
-        searchTwitter('#IE10').then(function (data) {
-            data.results.forEach(function (tweet) {
-                container.append('<li>' + tweet.text + '</li>');
-            });
+    searchTwitter('#IE10').then(function (data) {
+        data.results.forEach(function (tweet) {
+            container.append('<li>' + tweet.text + '</li>');
         });
     });
+});
 ```
 
 Different from dojo, jQuery does not return another promise from the then method. Instead, jQuery provides the pipe method to chain operations together. Additionally, jQuery offers other utility methods which allow for richer composition including filtering through the pipe method as well as the jQuery style $ syntax.
@@ -345,29 +345,29 @@ Different from dojo, jQuery does not return another promise from the then method
 The jQuery 1.5 release alters the Ajax methods to now return the jqXHR object which directly implements the promise interface.
 
 ```
-    $.ajax({
+$.ajax({
     url: 'http://search.twitter.com/search.json',
-        dataType: 'jsonp',
-        data: { q: '#IE10', rpp: 100 }
-    }).then(function (data) {
-        /* handle data */
-    }, function (error) {
-        /* handle error */
-    });
+    dataType: 'jsonp',
+    data: { q: '#IE10', rpp: 100 }
+}).then(function (data) {
+    /* handle data */
+}, function (error) {
+    /* handle error */
+});
 ```
 
 For consistency, the jQuery.ajax method also provides the success, error, and complete methods.
 
 ```
-    $.ajax({
-        url: 'http://search.twitter.com/search.json',
-        dataType: 'jsonp',
-        data: { q: '#IE10', rpp: 100 }
-    }).success(function (data) {
-        /* handle data */
-    }).error(function (error) {
-        /* handle error */
-    });
+$.ajax({
+    url: 'http://search.twitter.com/search.json',
+    dataType: 'jsonp',
+    data: { q: '#IE10', rpp: 100 }
+}).success(function (data) {
+    /* handle data */
+}).error(function (error) {
+    /* handle error */
+});
 ```
 
 ## Conclusion ##
