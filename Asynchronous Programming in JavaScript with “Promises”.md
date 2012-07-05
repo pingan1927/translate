@@ -73,14 +73,17 @@ The nested callbacks make the code hard to understand – what code is business 
 
 To reduce the complexity of coordinating asynchronous behavior, developers have looked for a way to perform consistent, easy to understand error handling with an alternative to nested callbacks.
 
-为减少协调异步行为的复杂性，开发人员找到了一种替代嵌套回调，协调一致的，错误处理容易理解的方法。
+为减少协调异步行为的复杂性，开发人员找到了一种替代嵌套回调，协调一致的，容易理解错误处理的方法。
 
 ## Promises ##
 
 One pattern is a promise, which represents the result of a potentially long running and not necessarily complete operation. Instead of blocking and waiting for the long-running computation to complete, the pattern returns an object which represents the promised result.
-其中的一直模式就是promise，
+
+其中的一种模式就是promise，它代表了一种潜在地长时间运行而且不一定必须地完成操作的结果。与阻塞并等待长时间运行计算的完成不同，这种模式返回一个代表承诺（promised）结果的对象。
 
 An example of this might be making a request to a third-party system where network latency is uncertain. Instead of blocking the entire application while waiting, the application is free to do other things until the value is needed. A promise implements a method for registering callbacks for state change notifications, commonly named the then method:
+
+例如，需要创建一个请求到第三方系统，而它的网络延迟是不确定的。应用程序完全做其他事情直到返回值变得必要，而不是在等待时阻塞住整个程序。Pormise实现了一种方法，为状态改变通知注册回调函数，通常命名为then方法。
 
 ```
 var results = searchTwitter(term).then(filterResults);
@@ -89,7 +92,11 @@ displayResults(results);
 
 At any moment in time, promises can be in one of three states: unfulfilled, resolved or rejected.
 
+在任何时刻，promise只可能处于三种状态之一：unfulfilled（未完成）, resolved（已解决） or rejected（拒绝）。
+
 To give an idea how the concept works, let’s start out with the [CommonJS Promise/A](http://wiki.commonjs.org/wiki/Promises/A) proposal which has several derivatives in popular libraries. The then method on the promise object adds handlers for the resolved and rejected states. This function returns another promise object to allow for promise-pipelining, enabling the developer to chain together async operations where the result of the first operation will get passed to the second.
+
+为了说明这些概念如何工作，我们可以了解下
 
 ```
 then(resolvedHandler, rejectedHandler);
@@ -198,6 +205,7 @@ Promise.when(promise1, promise2).then(function (data1, data2) {
 The important thing to remember is that the code in these samples is nothing but normal JavaScript. Web developers certainly create their own Promise-like libraries; but for convenience and consistency you can leverage the promises patterns exposed in common JavaScript libraries.
 
 ## Exploring Promises in jQuery and the Dojo Toolkit ##
+## 探索jQuery和Dojo Toolkit中的Promises ##
 
 There are many JavaScript libraries that are available to the developer which implement some form of a Promise. Let’s now explore a few libraries which expose promises or similar concepts.
 
@@ -384,6 +392,7 @@ $.ajax({
 ```
 
 ## Conclusion ##
+## 结论 ##
 
 There are many options available to the developer on how to deal with the complexities of asynchronous programming. With well-known patterns such as promises and deferred objects, and libraries that expose them, the developer is able to create rich interactions which seamlessly bridge asynchronous requests. In this example, we discussed leveraging promises and deferred objects atop XMLHttpRequests but the patterns could easily be layered on top of [Web Workers](http://www.w3.org/TR/workers/), the [setImmediate](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html) API, the [FileAPI](http://www.w3.org/TR/FileAPI/), or any other asynchronous API. You can use common JavaScript libraries so you don’t have to write boilerplate code.
 
