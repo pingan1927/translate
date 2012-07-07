@@ -324,9 +324,13 @@ dojo.ready(function () {
 
 The Dojo Toolkit may have been the first one to implement this pattern, but there are other major libraries such as jQuery which have also exposed a similar pattern.
 
+Dojo Toolkit可能是第一个实现这种模式的库，但还有许多其他主流的库例如jQuery也暴露了相似的模式。
+
 ### jQuery ###
 
 jQuery introduced a new concept in version 1.5 called Deferred which is also a derivative implementation of the CommonJS Promises/A proposal. The Deferred object exposes a then method which allows the developer to handle both the fulfillment and error states. Like dojo, this object also exposes resolve and reject. The developer can create a Deferred object in jQuery by calling the $.Deferred function.
+
+jQuery在1.5版本介绍了一个新的概念叫做Deferred，也是CommonJS Promises/A标准的一种衍生实现。Deferred对象公开了then方法，允许开发人员处理包括完成以及失败状态。类似于dojo，这个对象也公开了resolve以及reject。开发人员能够在jQuery中创建叫做$.Deferref函数的Deferred对象
 
 ```
 function xhrGet(url) {
@@ -387,7 +391,10 @@ $(document).ready(function () {
 
 Different from dojo, jQuery does not return another promise from the then method. Instead, jQuery provides the pipe method to chain operations together. Additionally, jQuery offers other utility methods which allow for richer composition including filtering through the pipe method as well as the jQuery style $ syntax.
 
+与dojo不同的是，jQuery不会从then方法返回另外一个promise。取而代之的是，jQuery提供了一个pipe方法用于将操作串联在一起。另外，jQuery提供了其他的工具方法允许更加富的组件，包括像jQuery的$语法风格从pipe方法中过滤。
+
 The jQuery 1.5 release alters the Ajax methods to now return the jqXHR object which directly implements the promise interface.
+jQuery 1.5发行版改变Ajax方法，现在变成返回jqXHR对象，直接实现了promise接口。
 
 ```
 $.ajax({
@@ -402,6 +409,7 @@ $.ajax({
 ```
 
 For consistency, the jQuery.ajax method also provides the success, error, and complete methods.
+为了保持一致性，jQuery.ajax方法也提供了success、error以及complete方法。
 
 ```
 $.ajax({
@@ -418,9 +426,13 @@ $.ajax({
 ## Conclusion ##
 ## 结论 ##
 
-There are many options available to the developer on how to deal with the complexities of asynchronous programming. With well-known patterns such as promises and deferred objects, and libraries that expose them, the developer is able to create rich interactions which seamlessly bridge asynchronous requests. In this example, we discussed leveraging promises and deferred objects atop XMLHttpRequests but the patterns could easily be layered on top of [Web Workers](http://www.w3.org/TR/workers/), the [setImmediate](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html) API, the [FileAPI](http://www.w3.org/TR/FileAPI/), or any other asynchronous API. You can use common JavaScript libraries so you don’t have to write boilerplate code.
+There are many options available to the developer on how to deal with the complexities of asynchronous programming. With well-known patterns such as promises and deferred objects, and libraries that expose them, the developer is able to create rich interactions which seamlessly bridge asynchronous requests. In this example, we discussed leveraging promises and deferred objects atop XMLHttpRequests  but the patterns could easily be layered on top of [Web Workers](http://www.w3.org/TR/workers/), the [setImmediate](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html) API, the [FileAPI](http://www.w3.org/TR/FileAPI/), or any other asynchronous API. You can use common JavaScript libraries so you don’t have to write boilerplate code.
+
+对于开发人员有许多合适的选择来处理异步编程的复杂。使用众所周知的模式例如promise以及deferred对象，以及公开了它们的库，开发人员可以创建具有无缝桥梁异步请求的复杂交互。在这个例子中，我们首先开始讨论了通过XMLHttpRequest利用promise以及deferred对象但是这种模式很容易被[Web Workers](http://www.w3.org/TR/workers/)、[setImmediate](https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html) API、[FileAPI](http://www.w3.org/TR/FileAPI/)或者其他的异步API给取代。你可以使用普通的JavaScript库因此也就无需编写模版代码。
 
 The [promises](http://msdn.microsoft.com/en-us/scriptjunkie/gg723713.aspx) pattern is a good start, but it’s not the end of the solution. In fact, [many patterns](https://github.com/joyent/node/wiki/modules#wiki-async-flow) are emerging to address asynchronous programming. We think this is an interesting development which makes our lives easier as web developers and think it can help you write your web applications as well. Happy coding!
+
+[promises](http://msdn.microsoft.com/en-us/scriptjunkie/gg723713.aspx)模式是一个好的开始，但不会是一个最终的解决方案。实际上，[许多模式](https://github.com/joyent/node/wiki/modules#wiki-async-flow)都在兴起用于适应异步编程。我们觉得这是一个有趣的开发过程可以是我们作为一个web开发人员的生活更加容易并且也能够帮助你写出你自己的web应用程序。快乐coding！
 
 —Matt Podwysocki, JavaScript geek and consultant
 
