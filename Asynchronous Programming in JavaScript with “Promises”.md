@@ -96,7 +96,7 @@ At any moment in time, promises can be in one of three states: unfulfilled, reso
 
 To give an idea how the concept works, let’s start out with the [CommonJS Promise/A](http://wiki.commonjs.org/wiki/Promises/A) proposal which has several derivatives in popular libraries. The then method on the promise object adds handlers for the resolved and rejected states. This function returns another promise object to allow for promise-pipelining, enabling the developer to chain together async operations where the result of the first operation will get passed to the second.
 
-为了说明这些概念如何工作，我们可以了解下
+为了说明这些概念如何工作，我们可以了解下CommonJS Promise/A 标准,这个标准已经在流行的库中有了许多的衍生工具。在promise对象中的then方法为resolved以及rejected状态添加了处理程序。then函数会返回另外一个promise对象以便于形成promise管道，使开发人员能够把异步操作串联起来，这样第一个操作的结果就可以传入到第二个中了。
 
 ```
 then(resolvedHandler, rejectedHandler);
@@ -104,8 +104,12 @@ then(resolvedHandler, rejectedHandler);
 
 The resolvedHandler callback function is invoked when the promise enters the fulfilled state, passing in the result from the computation. The rejectedHandler is invoked when the promise goes into the failed state.
 
+函数resolvedHandler回调函数会在promise对象进入完成状态时被调用，并传递从计算返回的结果。而rejectedHandler函数会在进入拒绝状态时被调用。
+
 We’ll revisit the example above using a pseudo code example of a promise to make the Ajax request to search Twitter, populate the screen with data, and handle errors. Let’s start with an example of what a promise library might look like if we were designing one from scratch with just the very basics. First we’ll need some form of object to keep the promise.
 
+可以使用promise的伪代码来重新实现上面的示例，主要包含创建一个Ajax请求用于搜索Twitter，用数据填充屏幕以及处理错误。为了更好的理解实现方法，我们尝试着从零开始构建一个promise模式的框架。首先我们以一个例子开始，即如果我们从头开始设计一个仅包含基础功能的promise库应该有什么，首先，我们需要一些对象的
+形式来保持promise。
 ```
 var Promise = function () {
     /* initialize promise */
@@ -114,6 +118,8 @@ var Promise = function () {
 
 Next, we’ll need to implement the then method which allows us to chain together operations based upon state change of our promise. This method takes two functions for handling when the promise is resolved and for when the promise is rejected.
 
+接下来，我们需要实现then方法，允许我们根据promise的状态变化将操作串联在一起。这个方法包含两个函数，用于处理当promise被解决以及当promise被拒绝的情况。
+
 ```
 Promise.prototype.then = function (onResolved, onRejected) {
     /* invoke handlers based upon state transition */
@@ -121,6 +127,8 @@ Promise.prototype.then = function (onResolved, onRejected) {
 ```
 
 We’ll also need a couple of methods to perform a state transition between unfulfilled and resolved or rejected states.
+
+我们也需要一对方法来处理未完成和已解决或者已拒绝之间的状态转换。
 
 ```
 Promise.prototype.resolve = function (value) {
@@ -132,6 +140,8 @@ Promise.prototype.reject = function (error) {
 };
 ```
 Now that we have some boilerplate for what a Promise object could be, let’s walk through the example from above of querying Twitter for #IE10 tagged tweets. First, we’ll create a method for making an Ajax GET request using the XMLHttpRequest2 to a given URL and wrap it in a promise. Next, we’ll create a method specifically for Twitter calling our Ajax wrapper method with a given search term. Finally, we’ll invoke our search function and display the results in an unordered list.
+
+对于一个promise对于应该是什么样现在我们已经搭建的差不多了。我们可以继续上面的示例，获取包含IE10标签的tweets。首先，我们创建一个方法通过使用XMLHttpRequest2来发送一个Ajax Get请求到一个给定的URL并且将它封装成一个promise。接下来，我们将特别为Twitter创建一个方法用来调用我们含有一个给定的搜索的参数的Ajax封装方法。最后，我们会调用我们的搜索函数并在无序列表中展示结果。
 
 ```
 function searchTwitter(term) {
@@ -174,6 +184,8 @@ function loadTweets() {
 
 Now that we’re able to make a single Ajax request as a Promise, let’s discuss a scenario when we want to make more than one Ajax request and coordinate the results. To handle this scenario, we’ll create a when method on our Promise object to queue the promises for to be invoked. Once the promises move from unfulfilled to either resolved or rejected, the appropriate handler is called in the then method. The when method is essentially a fork-join operation that awaits completion of all of the operations before continuing.
 
+到目前为止，我们可以把promise模式应用于单个Ajax请求，我们讨论一种场景，当我们想要发送超过一个Ajax请求并协调它们的结果。为了处理这种场景，我们会在我们的Promise对象中创造一个when方法用来储存会被调用的promise对象。一旦promise从unfulfilled转变成resolved或者rejected，then方法里对应的处理函数就会被调用。when方法在需要等待所有操作都完成的时候至关重要。
+
 ```
 Promise.when = function () {
     /* handle promises arguments and queue each */
@@ -181,6 +193,8 @@ Promise.when = function () {
 ```
 
 Now we can queue up multiple promises simultaneously, for example by searching for both #IE10 and #IE9 on Twitter.
+
+现在我们可以同时地存储多个promise，以在Twitter上搜索IE10和IE9两个标签的内容为例。
 
 ```
 var container, promise1, promise2;
@@ -204,14 +218,20 @@ Promise.when(promise1, promise2).then(function (data1, data2) {
 
 The important thing to remember is that the code in these samples is nothing but normal JavaScript. Web developers certainly create their own Promise-like libraries; but for convenience and consistency you can leverage the promises patterns exposed in common JavaScript libraries.
 
+需要记住的重点是在这些例子的代码除了普通的JavaScript并没有其它不同。Web开发人员必定会创造他们自己的类Promise库；但为了方便和一致性你可以利用在一般JavaScript库中暴露的promise模式。
+
 ## Exploring Promises in jQuery and the Dojo Toolkit ##
 ## 探索jQuery和Dojo Toolkit中的Promises ##
 
 There are many JavaScript libraries that are available to the developer which implement some form of a Promise. Let’s now explore a few libraries which expose promises or similar concepts.
 
+有许多针对开发人员的JavaScript库已经以某种形式实现了Promise。现在我们就来过下暴露了promise或者相同概念的几个库。
+
 ### The Dojo Toolkit ###
 
 The first widespread use of this pattern was with the [dojo](http://dojotoolkit.org/reference-guide/dojo/Deferred.html) toolkit deferred object in version 0.9. Just like the CommonJS Promises/A proposal above, this object exposes a then method which allows the developer to handle both the fulfillment and error states and chain the promises together. The dojo.Deferred object exposes two additional methods; resolve which fulfills the promise, and reject, which sends the promise into the rejected state. Below is an example of using the dojo.Deferred object to make an Ajax request to an URL and parse the results.
+
+第一个广泛使用promise模式的是0.9版本[dojo](http://dojotoolkit.org/reference-guide/dojo/Deferred.html) toolkit中的deferred对象。与上面的CommonJS Promises/A标准一样，这个对象暴露了一个then方法，允许开发人员处理完成以及错误状态并将promise串联在一起。dojo.Deferred对象暴露了两个额外的方法；resolve符合promise，reject则给promise发送rejected状态。下面是一个使用dojo.Deferred对象创建一个Ajax请求到一个URL并解析返回结果的例子。
 
 ```
 function searchTwitter(term) {
@@ -252,6 +272,8 @@ dojo.ready(function () {
 
 Fortunately, some of the Ajax methods such as dojo.xhrGet already return a dojo.Deferred object, so you don’t need to worry about wrapping those methods yourself.
 
+非常庆幸地是，许多Ajax方法例如dojo.xhrGet已经返回一个dojo.Deferred对象，因此你不必担心需要自己封装这些方法。
+
 ```
 var deferred = dojo.xhrGet({
     url: "search.json",
@@ -266,6 +288,8 @@ deferred.then(function (data) {
 ```
 
 The next concept that Dojo introduces is the dojo.DeferredList, which allows the developer to handle multiple dojo.Deferred objects at once and then return the results to the callback handler passed to the then function. This mirrors the when method we had on our own version of the promise object.
+
+Dojo介绍的第二个概念是dojo.DeferredList,它允许开发人员同时处理多个dojo.Deferred对象并且通过传入then函数返回结果给回调处理程序。这其实就是上面所提到的when方法的另一种表现形式。
 
 ```
 dojo.require("dojo.DeferredList");
