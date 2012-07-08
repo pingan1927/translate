@@ -3,11 +3,11 @@
 ## 模块化 ##
 > 解耦你的程序的重要性
 
-当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
+当我们说一个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过尽可能的减少依赖从而使得应用程序的维护变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
-然而与传统编程语言不用的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
+然而与传统编程语言不同的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个清晰、有条理的导入模块代码的方式。这个问题之前并不引人注意，直到最近几年人们对更有条理的JavaScript程序代码组织的需求变得愈加明显。
 
-取而代之的是，当前开发者仍然只能回到使用模块[module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)或者对象字面量模式等替代方法上。在这当中，模块脚本在Dom中被一个单一全局对象用命名空间串联起来，但这仍然可能在你的结构中导致命名冲突。在缺少一些人为处理或第三方工具时，这也不是处理依赖管理的干净的方式。
+然而，当前开发者仍然只能回到使用模块[module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)或者对象字面量模式等替代方法上。在这当中，模块脚本在Dom中被一个单一全局对象用命名空间串联起来，但这仍然可能在你的结构中导致命名冲突。在缺少一些人为处理或第三方工具时，这也不是处理依赖管理的干净的方式。
 
 虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是容易的但你可以从今天开始做这件事情。
 
