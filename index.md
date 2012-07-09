@@ -3,57 +3,57 @@
 ## 模块化 ##
 > 解耦你的程序的重要性
 
-当我们说一（某）个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过消除可能的依赖性从而促进应用程序可维护性变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
+当我们说一个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过尽可能的减少依赖从而使得应用程序的维护变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
-然而与传统编程语言不用的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个代码清晰的，有条理的导入此类代码模块的方式。规范里令人担忧的一点是之前并不需要非常伟大的想法，直到最近几年对有条理的JavaScript程序的需求变得愈加明显。
+然而与传统编程语言不同的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个清晰、有条理的导入模块代码的方式。这个问题之前并不引人注意，直到最近几年，人们对更有条理的JavaScript程序代码组织的需求变得愈加明显。
 
-取而代之的是，当前开发者仍然只能回到使用模块[module](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) or [object literal](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)或者对象字面量模式等替代方法上。在这当中，模块脚本在Dom中被一个单一全局对象用命名空间串联起来，但这仍然可能在你的结构中导致命名冲突。在缺少一些人为处理或第三方工具时，这也不是处理依赖管理的干净的方式。
+然而，当前开发者仍然只能使用[模块](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) 或者 [对象字面量](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)模式的一些变体模式。以这样的方式，模块脚本会在Dom中通过一个全局变量命名空间的方式组织，这2依然很容易在你的架构中导致命名冲突。并且如果你不进行人为的处理或借助第三方工具，处理模块的依赖关系还是很繁琐的。
 
-虽然这些问题的原生解决方案将会在ES Harmony中到来，好消息就是编写模块化的JavaScript从来都不是容易的但你可以从今天开始做这件事情。
+虽然含有这些问题原生解决方案的ES Harmony还有一些遥遥无期，不过好消息从今天起我们已经能够轻松的编写模块化的JavaScript代码了。
 
-在这篇文章中，我们会观察三种编写模块化JavaScript的格式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
+在这篇文章中，我们会一起看看三种编写模块化JavaScript的格式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
 
 ## 前奏 ##
 
 > 关于脚本加载器的说明
 
-很难在不谈论 [脚本加载器](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261)的情况下讨论AMD和CommonJS模块。目前，脚本加载是达到一个目标的方法，这个目标就是模块化JavaScript使之能够在今天的程序中使用。为了这点，很遗憾，使用兼容的脚本加载器是必要的。为了从本文中获得最大收益，我建议对流行的脚本加载工具是如何工作的先做一个**基本了解**从而通过上下文对模块格式的解释更能理解。
+讨论AMD和CommonJS模块之前，我们还是很有必要谈谈[脚本加载器](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261)。目前，为了使模块化的JavaScript能在如今的应用程序中广泛的发挥作用，脚本加载是至关重要的一点。为了从本文中获得最大收益，我建议大家先对流行的脚本加载工具是如何工作的做一个**基本了解**，从而方便对本文中对模块格式解释的理解。
 
-在AMD和CJS格式中，有很多很好的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但我强烈建议阅读John Hann关于[curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/)的文章以及James Burke的 [RequireJS](http://requirejs.org/docs/api.html)的API文档以了解更多。
+目前有很多很好的采用AMD或CJS格式的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但如果你要了解更多，我强烈建议阅读John Hann关于[curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/)的文章以及James Burke的 [RequireJS](http://requirejs.org/docs/api.html)的API文档。
 
-从生产角度来看，在与这些模块一起工作时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时非常值得推荐。有趣地是，配合[Almond](https://github.com/jrburke/almond) AMD shim，RequireJS不需要在部署站点上合并起来，你可以认为脚本加载器可以非常容易的切换到开发环境。
+从最终产品角度来说，在开发模块时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时是非常值得推荐的。并且有趣的是，配合[Almond](https://github.com/jrburke/almond) AMD shim，RequireJS可以不与部署站点上的模块合并起来，你可以认为脚本加载器可以非常容易的从开发环境中剥离出去。
 
-也就是说，James Burke有可能会，将这些笔记记在脑子里，让我们开始吧。
+此外，James Burke还说RequireJS会有助于解决在页面加载后依然要动态加载模块的场景，记住这些点，让我们开始吧。
 
 ## AMD ##
 
 > 一个在浏览器端编写模块化JavaScript的格式
 
-AMD（异步模块定义）格式的总体目标是提供一个当今程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo使用XHR+ eval的现实经历，这个格式的支持者希望未来的解决方案避免那些在过去遭遇到的弱点
+AMD（异步模块定义）格式的总体目标是提供一个程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo项目中使用XHR+ eval的实现，其支持者期望能够通过这个方案解决因为过去的问题而不断产生的新的解决方案的情况。
 
-AMD模块格式本身是一个提议，用于定义模块使模块以及依赖都可以被[异步](http://dictionary.reference.com/browse/asynchronous)加载。它有一系列显著的优势，包括两者都是异步的以及删除一般在代码和模块识别之间可能的高耦合性天生的高度灵活性。许多开发者喜欢使用它并且认为这是一个被提及的面向ES Harmony[模块系统](http://wiki.ecmascript.org/doku.php?id=harmony:modules)的可靠的跳板。
+AMD是一个提议，它定义了模块使得模块及其依赖都可以被[异步](http://dictionary.reference.com/browse/asynchronous)加载。它有一系列显著的优势，其中包括异步以及天生的高度灵活性（它去除了在模块代码和模块标识之间可能的高耦合性）。许多开发者喜欢使用它并且认为这是一个向ES Harmony[模块系统](http://wiki.ecmascript.org/doku.php?id=harmony:modules)发展的可靠的跳板。
 
-AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了[amdjs](https://github.com/amdjs)组。
+AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了[amdjs讨论组](https://github.com/amdjs)。
 
-今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS AMD格式等术语已在广泛的场合被了解，但最好上还是仅指AMD或者异步模块支持（）因为不是所有的CJS目录的参与者都希望如此。
+今天AMD被囊括在包括Dojo（1.7），MooTools(2.0),Firebug(1.8)甚至JQuery（1.7）等多个项目中。虽然CommonJS的AMD格式也有广泛的使用，但AMD最纯粹的描述还是仅指AMD本身或者异步模块支持，而不是CJS规范的参与者在wishlist目录上所罗列的。
 
-> **说明：** 有一次提案被作为Transport/C模块提交，但是这个规范没transport已经存在的CJS模块并不合适，然而在定义模块时选择AMD的命名约定，更有意义。
+> **说明：** 有一次提案被作为Module Transport/C规范提交，但是这个规范对于传输目前已知的CJS模块并不合适，不过在定义模块时选择AMD的命名约定，更有意义。
 
 ### 模块入门 ###
 
-在这里需要关注的两个关键概念是用于促进模块定义的`defin`e方法以及用于处理依赖加载的`require`方法。根据提议，*define*使用以下签名明码来定义命名的或者未命名的模块：
+在这里需要关注的两个关键概念是实现了模块定义的`define`方法以及用于处理依赖加载的`require`方法。根据提议，*define*使用以下格式来定义命名的或者未命名的模块：
 
 ```
 define(
-    module_id /*optional*/,
-    [dependencies] /*optional*/,
-    definition function /*function for instantiating the module or object*/
+    module_id /*可选*/,
+    [dependencies] /*可选*/,
+    definition function /*初始化模块的函数 或者 对象*/
 );
 ```
 
 正如你在行内注释了解到的一样，`module_id`是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
 
-当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过使模块碎片化来避免文件名和代码的复制。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下`module_id`相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器在CommonJS例如[r.js](https://github.com/jrburke/r.js/)环境下工作。
+当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过细化模块来避免文件名和代码的重复。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下`module_id`相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器（如[r.js](https://github.com/jrburke/r.js/)）可以在CommonJS环境下工作。
 
 回到define定义上，dependencies参数表现为一个依赖数组，这个依赖数组是你定义的模块所需要的。第三个参数（'definition function'）则是一个函数，用来执行模块的实例化工作。一个标准的模块应该被定义成以下形式：
 
@@ -93,7 +93,7 @@ define('myModule',
 });
 ```
 
-另一方面，require通常用于加载处于顶层的JavaScript文件代码或你希望的在模块内部动态地获取依赖。一个使用的例子如下：
+而另一方面，require则用于加载处于顶层的JavaScript文件代码或你希望的在模块内部动态地获取依赖。一个使用的例子如下：
 
 ### 理解AMD:require() ###
 
@@ -146,8 +146,8 @@ define(['./templates', 'text!./template.md','css!./template.css'],
     }
 });
 ```
-
-> **注意**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意事项，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的方式，这也可能导致CSS作为一个依赖被包含进在优化后的文件，所以在这种情况下谨慎使用作为依赖加载的CSS。
+/// XXX
+> **注意**: 尽管上面的例子中为了加载css依赖而将css!包括进来，但切记这种方法存在许多注意点，例如当CSS完全加载时并能确保完全渲染出来。这依赖于你构建的方式，这也可能导致CSS作为一个依赖被包含进在优化后的文件，所以在这种情况下谨慎使用作为依赖加载的CSS。
 
 ### 使用require.js加载AMD模块 ###
 
@@ -196,8 +196,8 @@ define(['lib/Deferred'], function( Deferred ){
 - 语法比目前我们依靠的全局命名空间以及`<script>`标签等解决方案清晰。有一个干净的方式用来声明独立的模块以及可能的依赖。
 - 模块定义是经过封装的，帮助我们避免污染全局命名空间。
 - 比起其他可选的解决方案（例如很快会介绍的CommonJS）工作得更好。在跨域、本地、以及debug方面没有问题。使用时不需要依赖服务器端的工具。大多数AMD的加载器在浏览器端加载模块时并不需要build过程。
-- 提供了 `transport`方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
-- 当需要是可以懒加载脚本。
+- 提供了 `transport` 方法用于将多个模块包含在一个文件当中。其他的方法例如CommonJS却必须同意一个transport格式。
+- 当需要时可以懒加载脚本。
 
 ### 相关阅读 ###
 - [The RequireJS Guide To AMD](http://requirejs.org/docs/whyamd.html)
@@ -211,7 +211,7 @@ define(['lib/Deferred'], function( Deferred ){
 
 ### AMD模块和Dojo ###
 
-在Dojo中定义兼容AMD的模块相当简单。As per above，定义任意模块，依赖放在一个数组中作为第一个参数并且提供一个回调（工厂），一旦依赖加载完毕这个回调将运行这个模块。例如：
+在Dojo中定义兼容AMD的模块相当简单。类似之前的，定义任意模块，依赖放在一个数组中作为第一个参数并且提供一个回调（工厂函数），一旦依赖加载完毕这个回调将运行这个模块。例如：
 
 ```
 define(["dijit/Tooltip"], function( Tooltip ){
@@ -220,9 +220,9 @@ define(["dijit/Tooltip"], function( Tooltip ){
 });
 ```
 
-请注意模块的匿名特性使得模块可以被Dojo异步加载器、RequireJS或者标准的[dojo.require()](http://docs.dojocampus.org/dojo/require)模块加载器等你习惯的模块加载器使用。
+其模块的异步特性使得模块可以被Dojo异步加载器、RequireJS或者标准的[dojo.require()](http://docs.dojocampus.org/dojo/require)模块加载器等你习惯的模块加载器使用。
 
-对于模块引用的疑惑，有许多有趣的陷阱，知道的话是很有用的。虽然AMD-主张的引用模块的方式在依赖列表里用一系列匹配参数声明它们，但这没有被Dojo 1.6的构建系统所支持-它仅仅在兼容AMD的加载器上才能工作。例如：
+<上下文不太通>对于模块引用的疑惑，有许多有趣的陷阱，知道的话是很有用的。虽然AMD-主张的引用模块的方式在依赖列表里用一系列匹配参数声明它们，但这没有被Dojo 1.6的构建系统所支持-它仅仅在兼容AMD的加载器上才能工作。例如：
 
 ```
 define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
@@ -235,7 +235,7 @@ define(["dojo/cookie", "dijit/Tooltip"], function( cookie, Tooltip ){
 
 > **注意**：尽管Dojo 1.6官方不支持基于用户的AMD模块（或者异步加载），仍可能通过使用一些不同的脚本加载器来与Dojo一起工作。目前，所以的Dojo core以及Dijit模块都被转换成AMD语法，改进到支持整个AMD将在1.7到2.0版本实现。
 
-最后一个需要注意的疑难杂症是如果你希望继续使用Dojo构建系统或者希望迁移老的模块到最新的AMD风格，列出更详细的版本，可以更容易的迁移。请注意，包括Dojo、Dijit和作为依赖的引用：
+最后一个需要注意的问题是如果你希望继续使用Dojo构建系统或者希望迁移老的模块到最新的AMD风格，<上下文不太通>列出更详细的版本，可以更容易的迁移。请注意，包括Dojo、Dijit和作为依赖的引用：
 
 ```
 define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
@@ -246,7 +246,7 @@ define(["dojo", "dijit", "dojo/cookie", "dijit/Tooltip"], function(dojo, dijit){
 
 ### AMD模块的设计模式（Dojo）
 
-如果你关注了我之前几篇文章关于设计模式的好处，将知道这些设计模式在提高我们找到一般开发难题的结构性解决方案是多么的高效率。[John Hann](http://twitter.com/unscriptable)最近给出了一个非常出色的关于AMD设计模式的presentation，包含了Singleton, Decorator, Mediator以及其它。如果有机会强烈建议大家去阅读下他的[slides](http://unscriptable.com/code/AMD-module-patterns/)。
+如果你关注了我之前几篇文章关于设计模式的好处，<句子读不通>将知道这些设计模式在提高我们找到一般开发难题的结构性解决方案是多么高效。关于AMD设计模式，[John Hann](http://twitter.com/unscriptable)最近给出了一个非常出色的presentation，包含了Singleton, Decorator, Mediator以及其它。<有外链么>如果有机会强烈建议大家去阅读下他的[slides](http://unscriptable.com/code/AMD-module-patterns/)。
 
 这些模式的许多例子可以从下面找到：
 
@@ -313,7 +313,7 @@ define(['mylib/Array'], function ( array ) {
 
 #### 基础 ####
 
-与Dojo不同，JQuery真正仅仅需要配备一个文件，虽然有了库基于插件的特性，我们仍可以演示定义一个AMD模块并使用它是何等地简单，如下所示：
+与Dojo不同，<“仅仅”的感觉像是Jquery更容易嫁接于AMD上面应该不是吧>JQuery真正仅仅需要配备一个文件，虽然有了库基于插件的特性，我们仍可以演示定义一个AMD模块并使用它是何等地简单，如下所示：
 
 ```
 define(['js/jquery.js','js/jquery.color.js','js/underscore.js'],
