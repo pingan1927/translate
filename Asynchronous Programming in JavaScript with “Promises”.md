@@ -1,4 +1,4 @@
-＃ 在JavaScript中使用“Promise”进行异步编程 ＃
+# 在JavaScript中使用“Promise”进行异步编程 #
 
 >Published Monday, September 12, 2011 4:04 AM
 
