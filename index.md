@@ -3,23 +3,23 @@
 ## 模块化 ##
 > 解耦你的程序的重要性
 
-当我们说一个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过尽可能的减少依赖从而使得应用程序的维护变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
+当我们说一个程序是模块化的，通常我们指它是由一组存放在模块中的高度解耦的独立功能片段所组成。正如你所了解的，[松耦合](http://arguments.callee.info/2009/05/18/javascript-design-patterns--mediator/)通过尽可能的减少依赖从而使得维护应用程序变得更简单。当松耦合被高效地实现时，可以很容易地观察到系统的一部分变化是如何影响到另一部分的。
 
-然而与传统编程语言不同的是，当前版本的JavaScript（[ECMA-262]）规范并没有提供一个清晰、有条理的导入模块代码的方式。这个问题之前并不引人注意，直到最近几年，人们对更有条理的JavaScript程序代码组织的需求变得愈加明显。
+然而与传统编程语言不同的是，当前版本的JavaScript（[ECMA-262](http://www.ecma-international.org/publications/standards/Ecma-262.htm)）规范并没有提供一个清晰、有条理的导入模块代码的方式。这个问题之前并不引人注意，直到最近几年，人们对更有条理地组织JavaScript程序代码的需求变得愈加强烈。
 
-然而，当前开发者仍然只能使用[模块](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth) 或者 [对象字面量](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)模式的一些变体模式。以这样的方式，模块脚本会在Dom中通过一个全局变量命名空间的方式组织，这2依然很容易在你的架构中导致命名冲突。并且如果你不进行人为的处理或借助第三方工具，处理模块的依赖关系还是很繁琐的。
+然而，当前开发人员仍然只能使用[模块](http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth)或者[对象字面量](http://blog.rebeccamurphey.com/2009/10/15/using-objects-to-organize-your-code)模式的一些变体模式。以这样的方式，模块脚本会在Dom中通过一个全局变量命名空间的方式组织，但这依然很容易导致你的架构命名冲突。并且如果你不进行人为的处理或借助第三方工具，处理模块的依赖关系还是很繁琐的。
 
-虽然含有这些问题原生解决方案的ES Harmony还有一些遥遥无期，不过好消息从今天起我们已经能够轻松的编写模块化的JavaScript代码了。
+虽然含有这些问题原生解决方案的ES Harmony还有一些遥遥无期，不过好消息从今天起我们已经能够轻松地编写模块化的JavaScript代码了。
 
-在这篇文章中，我们会一起看看三种编写模块化JavaScript的格式：**AMD**,**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
+在这篇文章中，我们会一起看看三种编写模块化JavaScript的格式：**AMD**、**CommonJS**以及下一个JavaScript版本的提案，**Harmony**。
 
 ## 前奏 ##
 
 > 关于脚本加载器的说明
 
-讨论AMD和CommonJS模块之前，我们还是很有必要谈谈[脚本加载器](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261)。目前，为了使模块化的JavaScript能在如今的应用程序中广泛的发挥作用，脚本加载是至关重要的一点。为了从本文中获得最大收益，我建议大家先对流行的脚本加载工具是如何工作的做一个**基本了解**，从而方便对本文中对模块格式解释的理解。
+讨论AMD和CommonJS模块之前，我们还是有必要谈谈[脚本加载器](http://msdn.microsoft.com/en-us/scriptjunkie/hh227261)。目前，为了使模块化的JavaScript能在当今的应用程序中广泛的发挥作用，脚本加载是至关重要的一点。为了能从本文中获得最大收益，我建议大家先对流行的脚本加载工具是如何工作的做一个**基本了解**，从而方便对本文中对模块格式解释的理解。
 
-目前有很多很好的采用AMD或CJS格式的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但如果你要了解更多，我强烈建议阅读John Hann关于[curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/)的文章以及James Burke的 [RequireJS](http://requirejs.org/docs/api.html)的API文档。
+目前有很多很好的采用AMD或CJS格式的加载器用来处理模块加载，而我的个人选择是 [RequireJS](http://requirejs.org/) 和[curl.js](https://github.com/unscriptable/curl)。关于这些工具的完整教程不在本文讨论的范围之内，但如果你想更多地了解，我强烈建议阅读John Hann关于[curl.js](http://unscriptable.com/index.php/2011/03/30/curl-js-yet-another-amd-loader/)的文章以及James Burke的 [RequireJS](http://requirejs.org/docs/api.html)的API文档。
 
 从最终产品角度来说，在开发模块时，使用优化工具（例如RequireJS优化器）用来串联脚本在部署时是非常值得推荐的。并且有趣的是，配合[Almond](https://github.com/jrburke/almond) AMD shim，RequireJS可以不与部署站点上的模块合并起来，你可以认为脚本加载器可以非常容易的从开发环境中剥离出去。
 
@@ -29,9 +29,9 @@
 
 > 一个在浏览器端编写模块化JavaScript的格式
 
-AMD（异步模块定义）格式的总体目标是提供一个程序员可以使用的模块化JavaScript解决方案。它诞生于Dojo项目中使用XHR+ eval的实现，其支持者期望能够通过这个方案解决因为过去的问题而不断产生的新的解决方案的情况。
+AMD（异步模块定义）格式的总体目标是提供一个开发人员可以使用的模块化JavaScript解决方案。它诞生于Dojo项目中使用XHR+ eval的实现，其支持者期望能够通过这个方案解决因为过去的问题而不断产生的新的解决方案的情况。
 
-AMD是一个提议，它定义了模块使得模块及其依赖都可以被[异步](http://dictionary.reference.com/browse/asynchronous)加载。它有一系列显著的优势，其中包括异步以及天生的高度灵活性（它去除了在模块代码和模块标识之间可能的高耦合性）。许多开发者喜欢使用它并且认为这是一个向ES Harmony[模块系统](http://wiki.ecmascript.org/doku.php?id=harmony:modules)发展的可靠的跳板。
+AMD是一个提议，它定义了模块使得模块及其依赖都可以被[异步](http://dictionary.reference.com/browse/asynchronous)加载。它有一系列显著的优势，其中包括异步以及天生的高度灵活性（它去除了在模块代码和模块标识之间可能的高耦合性）。许多开发人员喜欢使用它并且认为这是一个向ES Harmony[模块系统](http://wiki.ecmascript.org/doku.php?id=harmony:modules)发展的可靠的跳板。
 
 AMD最开始作为一个在CommonJS目录中模块格式的规范草案，但是由于它无法达成完全共识，格式的进一步发展就转移到了[amdjs讨论组](https://github.com/amdjs)。
 
@@ -53,7 +53,7 @@ define(
 
 正如你在行内注释了解到的一样，`module_id`是一个可选的参数，这个参数通常在非AMD的串联工具被使用时才需要（也会有这个参数非常有用的个例存在）。当删掉这个参数时，我们称它为匿名模块。
 
-当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过细化模块来避免文件名和代码的重复。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下`module_id`相当于文件路径。开发者可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器（如[r.js](https://github.com/jrburke/r.js/)）可以在CommonJS环境下工作。
+当我们使用匿名模块时，模块识别的原则就是DRY（Don't Repeat Yourself)，通过细化模块来避免文件名和代码的重复。因为代码更具有可移植性，它能够很容易的移动到其它位置(或者文件系统）而不需要改变代码本身或者只改变代码的ID。在简单的包或不使用包的情况下`module_id`相当于文件路径。开发人员可以在多种环境下运行同一段代码而仅仅需要使用一个AMD优化器，这个优化器（如[r.js](https://github.com/jrburke/r.js/)）可以在CommonJS环境下工作。
 
 回到define定义上，dependencies参数表现为一个依赖数组，这个依赖数组是你定义的模块所需要的。第三个参数（'definition function'）则是一个函数，用来执行模块的实例化工作。一个标准的模块应该被定义成以下形式：
 
@@ -396,9 +396,9 @@ define.amd = {
 
 以上细碎的例子能够真正地说明AMD模块是多没有用，更希望向大家提供理解他们是如何工作的基础。
 
-你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了[IBM](http://www.ibm.com/)、[BBC iPlayer](http://www.bbc.co.uk/iplayer/)，这突出了在企业级别开发者是多么严肃地对待这个格式。
+你或许会哪些目前现实大型应用程序使用AMD作为他们架构的一部分感兴趣。这些包括了[IBM](http://www.ibm.com/)、[BBC iPlayer](http://www.bbc.co.uk/iplayer/)，这突出了在企业级别开发人员是多么严肃地对待这个格式。
 
-至于要知道许多开发者在他们的程序中选择AMD模块的原因，你应该对James Burke写的[文章](http://tagneto.blogspot.com/2011/04/on-inventing-js-module-formats-and.html)感兴趣。
+至于要知道许多开发人员在他们的程序中选择AMD模块的原因，你应该对James Burke写的[文章](http://tagneto.blogspot.com/2011/04/on-inventing-js-module-formats-and.html)感兴趣。
 
 ## CommonJS ##
 
@@ -522,9 +522,9 @@ exports.helloWorld = function(){
 
 ### CJS适合浏览器吗？ ###
 
-许多开发者认为CommonJS更适合服务器端开发，其中一个原因是存在一些异议即哪种格式在前Harmony时代应该作为一个事实上的标准并被使用而往前发展。反对CJS的观点包括在Javascript里CommonJS的许多API符合面向服务器的特性但是在浏览器端基本不能实现。例如，io、系统，js可以认为实际上无法实现它们的功能特性。
+许多开发人员认为CommonJS更适合服务器端开发，其中一个原因是存在一些异议即哪种格式在前Harmony时代应该作为一个事实上的标准并被使用而往前发展。反对CJS的观点包括在Javascript里CommonJS的许多API符合面向服务器的特性但是在浏览器端基本不能实现。例如，io、系统，js可以认为实际上无法实现它们的功能特性。
 
-但也有种说法，了解CJS模块的结构无论如何是非常有用的，我们可以更好地鉴别他们是如何定义合适的可能到处使用的模块。在客户端和服务器端都有的模块包含验证、转换以及模板引擎。许多程序员都在努力接近的方式即某种格式可以对CJS进行优化，当某个模块可以在服务器端使用而在AMD里没有同样的模块。
+但也有种说法，了解CJS模块的结构无论如何是非常有用的，我们可以更好地鉴别他们是如何定义合适的可能到处使用的模块。在客户端和服务器端都有的模块包含验证、转换以及模板引擎。许多开发人员都在努力接近的方式即某种格式可以对CJS进行优化，当某个模块可以在服务器端使用而在AMD里没有同样的模块。
 
 因为AMD模块能够使用插件从而使定义更加细粒度的东西，例如构造函数和函数变得有意义。而CJS模块只能定义对象，如果你尝试从它们那获得构造函数可能会觉得非常乏味。
 
@@ -734,7 +734,7 @@ $(function(){
 ## ES Harmony ##
 > 未来的模块
 
-[TC39](http://www.ecma-international.org/memento/TC39.htm)，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多程序员（例如[Alex Russel](http://twitter.com/slightlylate)）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
+[TC39](http://www.ecma-international.org/memento/TC39.htm)，标准本身受ECMAScript的语法和语义定义控制，其下一个迭代定义由一群非常聪明的程序员组成。其中的许多开发人员（例如[Alex Russel](http://twitter.com/slightlylate)）一直在持续关注着过去几年大规模开发中Javascript使用的变革，也敏锐地意识到编写更加模块化的JS这一更好的语言特性的需求。
 
 基于此，目前已经有许多令人兴奋的提案加入到这门语言中，包括灵活的可在客户端以及服务器端工作的[模块](http://wiki.ecmascript.org/doku.php?id=harmony:modules)，[模块加载器](http://wiki.ecmascript.org/doku.php?id=harmony:module_loaders)以及[其他](http://wiki.ecmascript.org/doku.php?id=harmony:proposals)。在这一节，我将为你展示一些ES.next中针对模块的语法代码示例，你可以抢先体验到他们会是什么。
 
@@ -742,7 +742,7 @@ $(function(){
 
 ### 包含Imports和Exports的模块 ###
 
-如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念被建议成一种略微简洁的方式，其中依赖被制定使用`import`关键字。`export`和你期望的区别也不是很大，我想大多程序员看了下面的代码之后会立刻“把握”到它的。
+如果你已经阅读了上面关于AMD和CJS的部分，你应该已经熟悉了模块依赖的概念已经模块输出（或者，我们允许其他模块使用的公开的API/变量）。在ES.next，这些概念被建议成一种略微简洁的方式，其中依赖被制定使用`import`关键字。`export`和你期望的区别也不是很大，我想大多开发人员看了下面的代码之后会立刻“把握”到它的。
 
 * **import** 声明作为一个局部变量绑定模块的exports，可以重命名以避免命名碰撞/冲突。
 
@@ -806,7 +806,7 @@ Loader.load('http://addyosmani.com/factory/cakes.js',
 
 ### 针对服务器端的类CommonJS模块 ###
 
-针对面向服务器的程序员，ES.next建议的模块系统并不局限于在浏览器端查找模块。例如下面，你能够看到一个建议在服务器端使用的类CJS的模块。
+针对面向服务器的开发人员，ES.next建议的模块系统并不局限于在浏览器端查找模块。例如下面，你能够看到一个建议在服务器端使用的类CJS的模块。
 
 ```
 // io/File.js
@@ -901,7 +901,7 @@ class Cake{
 ## 结论和进一步深入 ##
 > 回顾
 
-在这篇文章中我们回顾了许多使用现代模块格式用来编写模块化Javascript的可用选项。这些格式相比传统的模块模式拥有一些特性，其中包括：避免开发者为每一个他创建的模块创建一个全局变量，对静态以及动态依赖管理更好的支持，提升了脚本加载器的能力，服务器端模块更好的兼容性，等等。
+在这篇文章中我们回顾了许多使用现代模块格式用来编写模块化Javascript的可用选项。这些格式相比传统的模块模式拥有一些特性，其中包括：避免开发人员为每一个他创建的模块创建一个全局变量，对静态以及动态依赖管理更好的支持，提升了脚本加载器的能力，服务器端模块更好的兼容性，等等。
 
 简而言之，我推荐大家尝试下今天推荐的格式，因为这些格式提供了很强的功效和灵活性，从而在我们构建基于可复用的功能块的程序时能够帮助到我们。
 
